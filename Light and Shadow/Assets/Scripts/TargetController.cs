@@ -14,7 +14,6 @@ public class TargetController : MonoBehaviour
     {
         // Moves the target reticle to wherever the mouse is on screen
         _mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
-
         transform.position = _mousePos;
     }
 

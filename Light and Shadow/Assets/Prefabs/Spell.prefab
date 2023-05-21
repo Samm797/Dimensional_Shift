@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7523050932669309526}
   - component: {fileID: -104972149150387100}
   - component: {fileID: 4570226741884475067}
+  - component: {fileID: -3182272101217455850}
   m_Layer: 0
   m_Name: Spell
   m_TagString: Spell
@@ -138,3 +139,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outOfBoundsX: 25
   outOfBoundsY: 25
+--- !u!114 &-3182272101217455850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8152842139207104699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0726ed6253c77c54db0981dc296229a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

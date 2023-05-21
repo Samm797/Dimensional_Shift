@@ -21,6 +21,7 @@ public class EnemyAI : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         // Currently just kills the enemies
+        // TODO: Have these functions implement the health system
         if (other.CompareTag("Spell"))
         {
             Destroy(other.gameObject);
