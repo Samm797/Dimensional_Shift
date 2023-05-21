@@ -1,7 +1,6 @@
-using System.Collections.Specialized;
 using UnityEngine;
 
-public class PlayerController: MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
 
     private Rigidbody2D _rb;
@@ -13,8 +12,7 @@ public class PlayerController: MonoBehaviour
     [SerializeField] private GameObject _spellPrefab;
     [SerializeField] private float _spellSpeed = 30f;
     private Camera _camera;
-    private Vector2 _target;
-   
+
 
 
     // Start is called before the first frame update
@@ -29,6 +27,7 @@ public class PlayerController: MonoBehaviour
     {
         MovePlayer();
 
+        // Mouse 0, making this so I can utilize different inputs easier later if wanted
         if (Input.GetButtonDown("Fire1"))
         {
             Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
@@ -48,12 +47,13 @@ public class PlayerController: MonoBehaviour
         _horizontalInput = Input.GetAxis("Horizontal");
         _verticalInput = Input.GetAxis("Vertical");
 
-        Vector2 movement = new Vector2 (_horizontalInput, _verticalInput) * _activeMoveSpeed;
+        Vector2 movement = new Vector2(_horizontalInput, _verticalInput) * _activeMoveSpeed;
         _rb.velocity = movement;
 
+        
         if (Input.GetButtonDown("Dash"))
         {
-            if (_dashCooldownCounter <= 0 && _dashCounter <=0 )
+            if (_dashCooldownCounter <= 0 && _dashCounter <= 0)
             {
                 _activeMoveSpeed = _dashSpeed;
                 _dashCounter = _dashLength;
@@ -64,7 +64,7 @@ public class PlayerController: MonoBehaviour
         {
             _dashCounter -= Time.deltaTime;
 
-            if ( _dashCounter <= 0)
+            if (_dashCounter <= 0)
             {
                 _activeMoveSpeed = _moveSpeed;
                 _dashCooldownCounter = _dashCooldown;
