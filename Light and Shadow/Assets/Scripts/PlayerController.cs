@@ -1,3 +1,4 @@
+using UnityEditorInternal;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -7,19 +8,22 @@ public class PlayerController : MonoBehaviour
     private float _horizontalInput, _verticalInput;
     [SerializeField] private float _moveSpeed, _dashSpeed;
     private float _activeMoveSpeed;
-    [SerializeField] private float _dashLength = 0.5f, _dashCooldown = 1.0f;
+    private float _dashLength = 0.5f, _dashCooldown = 1.0f;
     private float _dashCounter, _dashCooldownCounter;
+
+    // Combat
     [SerializeField] private GameObject _spellPrefab;
     [SerializeField] private GameObject _spellContainer;
-    [SerializeField] private float _spellSpeed = 30f;
+    private float _spellSpeed = 30f;
+    private HealthSystem _healthSystem;
 
     // Spell direction
     private Camera _camera;
 
     // Dimension shifting
     private ColorManager _colorManager;
-    private float _canShift = -2f;
-    [SerializeField] private float _shiftCooldown = 2f;
+    private float _canShift = -0.5f;
+    private float _shiftCooldown = 2f;
 
 
 
@@ -40,11 +44,17 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("The ColorManager for the player is NULL.");
         }
+
+        _healthSystem = GetComponent<HealthSystem>();
+    }
+
+    private void FixedUpdate()
+    {
+        MovePlayer();
     }
 
     void Update()
     {
-        MovePlayer();
 
         // Mouse 0, making this so I can utilize different inputs easier later if wanted
         if (Input.GetButtonDown("Fire1"))
@@ -66,6 +76,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Shift") && Time.time > _canShift)
         {
             DimensionShift();
+            Debug.Log(_colorManager.IsDarkActive());
         }
     }
 
@@ -131,4 +142,8 @@ public class PlayerController : MonoBehaviour
         // TODO: Add audio and camera effects to DimensionShift
     }
 
+    public Vector3 GetPosition()
+    {
+        return transform.position;
+    }
 }

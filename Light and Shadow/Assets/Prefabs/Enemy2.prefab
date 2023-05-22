@@ -9,11 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1982408356754866253}
+  - component: {fileID: 5000539030966149988}
+  - component: {fileID: -859478604478665754}
   - component: {fileID: 1982408356754866252}
   - component: {fileID: 1982408356754866254}
   - component: {fileID: -7458398572437196901}
   - component: {fileID: 3135453149004587505}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enemy2
   m_TagString: Monster
   m_Icon: {fileID: 0}
@@ -35,6 +37,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5000539030966149988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982408356754866251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8620f631921d4b146a9f9e8c837a48cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _moveSpeed: 1
+--- !u!114 &-859478604478665754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982408356754866251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b87c4c4af3e0a274d914cd6759a09072, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 10
 --- !u!212 &1982408356754866252
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -99,7 +127,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da0cecdd47166004386b389bcd0c8309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 1
+  _baseDamage: 2
+  _darkDamage: 4
 --- !u!50 &-7458398572437196901
 Rigidbody2D:
   serializedVersion: 4
