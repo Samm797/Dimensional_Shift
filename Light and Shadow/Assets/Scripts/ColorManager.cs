@@ -6,18 +6,14 @@ using UnityEngine;
 public class ColorManager : MonoBehaviour
 {
     private bool _isDarkActive;
+    private ColorChanger[] _colorChangers;
     // private List<ColorChanger> _colorChangers;
     
     // Start is called before the first frame update
     void Start()
     {
         _isDarkActive = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        _colorChangers = FindObjectsOfType<ColorChanger>();
     }
 
     /// <summary>
@@ -25,7 +21,6 @@ public class ColorManager : MonoBehaviour
     /// </summary>
     public void ChangeDimension()
     {
-        // Swaps true and false
         StartCoroutine(ChangeDimensionRoutine());
     }
 
@@ -38,12 +33,11 @@ public class ColorManager : MonoBehaviour
 
         // SUPER performant heavy, will likely not work for a bigger project
         // Currently a 2 second CD on this for the player and it will shift the background and the obstacles
-        ColorChanger[] colorChangers = FindObjectsOfType<ColorChanger>();
 
         // Goes through the array of any object that has a ColorChanger item and will 
-        foreach (ColorChanger colorChanger in colorChangers)
+        foreach (ColorChanger colorChanger in _colorChangers)
         {
-            if (_isDarkActive == false)
+            if (_isDarkActive == true)
             {
                 colorChanger.ShiftToLight();
             }
@@ -53,12 +47,6 @@ public class ColorManager : MonoBehaviour
             }
         }
         
-        // Clears the array so we can shift back later
-        for (int i = 0; i < colorChangers.Length; i++)
-        {
-            colorChangers[i] = null;
-        }
-
         _isDarkActive = !_isDarkActive;
         yield break;
     }

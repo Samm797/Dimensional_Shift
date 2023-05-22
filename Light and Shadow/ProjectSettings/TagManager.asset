@@ -17,9 +17,9 @@ TagManager:
   - UI
   - Background
   - Foreground
-  - 
-  - 
-  - 
+  - Obstacle
+  - Player
+  - Enemy
   - 
   - 
   - 
