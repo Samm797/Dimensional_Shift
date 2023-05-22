@@ -3,25 +3,27 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
+    // State and Pathfinding
     private enum State
     {
         Roaming,
         Chasing,
         Attacking
     }
-
     private State _state;
     private EnemyPathfinding _enemyPathFinding;
     private Vector3 _startingPosition;
     private bool _isRoutineActive;
-
     private PlayerController _player;
-    private Vector3 _playerPosition;
+    [SerializeField] private float _attackDistance;
+
+    // Health and damage
     private HealthSystem _healthSystem;
     [SerializeField] private int _baseDamage;
     [SerializeField] private int _darkDamage;
     private int _currentDamage;
     private ColorManager _colorManager;
+    [SerializeField] private int _monsterID;
 
     
 
@@ -47,45 +49,57 @@ public class EnemyAI : MonoBehaviour
             Debug.LogError("The Monster's color manager is NULL.");
         }
         
-
+        // Set current damage to base damage as long as the dark is inactive
         if (_colorManager.IsDarkActive() == false)
         {
             _currentDamage = _baseDamage;
         } 
+        // Else, set current damage to dark damage
         else
         {
             _currentDamage = _darkDamage;
         }
 
-        _startingPosition = transform.position;
+        // No routine is running at the start
         _isRoutineActive = false;
     }
 
     private void Awake()
     {
+        // Initialize the pathfinding script and set the state to roaming at the start
         _enemyPathFinding = GetComponent<EnemyPathfinding>();
         _state = State.Roaming;
     }
 
     private void FixedUpdate()
     {
+        // Checks the current state as a switch
         switch(_state)
         {
             default:
             case State.Roaming:
-                Debug.Log("State.Roaming");
+                Debug.Log("Roaming");
+
+                // If this is not checked, the Coroutine is called on every frame and the enemy will not mov
                 if (_isRoutineActive == false)
                 {
                     StartCoroutine(RoamingRoutine());
                 }
+                // Ensures that the enemy is looking for the player while randomly roaming
                 FindTarget();
                 break;
             case State.Chasing:
-                Debug.Log("State.Chasing");
-                if ( _isRoutineActive == false)
-                {
-                    StartCoroutine(ChasingRoutine());
-                }
+                Debug.Log("Chasing");
+
+                // Get the players position on each physics update and move towards the player 
+                Vector3 playerPosition = _player.GetPosition();
+                _enemyPathFinding.MoveToPlayer(playerPosition);
+
+                // Using this as a placeholder for the moment, just stops the enemies
+                StopNearPlayer();
+                break;
+            case State.Attacking:
+                Debug.Log("Attacking");
                 break;
         }
     }
@@ -111,21 +125,16 @@ public class EnemyAI : MonoBehaviour
     {
         if (other.CompareTag("Spell"))
         {
+            // If dark is not active, do 1 damage to enemies
             if (_colorManager.IsDarkActive() == false)
             {
                 _healthSystem.Damage(1);
             }
+            // Else, double damage
             else
             {
                 _healthSystem.Damage(2);
             }
-        }
-
-        // Damage the player 
-        if (other.CompareTag("Player"))
-        {
-            Debug.Log($"Damaged the player by {_currentDamage} HP!");
-            other.GetComponent<HealthSystem>().Damage(_currentDamage);
         }
     }
 
@@ -135,40 +144,53 @@ public class EnemyAI : MonoBehaviour
         while (_state == State.Roaming)
         {
             Vector3 roamPosition = GetRoamingPosition();
-            _enemyPathFinding.MoveTo(roamPosition);
+            _enemyPathFinding.MoveToRandom(roamPosition);
             yield return new WaitForSeconds(2f);
         }
         _isRoutineActive = false;
     }
 
-    IEnumerator ChasingRoutine()
-    {
-        _isRoutineActive = true;
-        while (_state == State.Chasing)
-        {
-            Vector3 playerPosition = GetPlayerPosition();
-            _enemyPathFinding.MoveTo(playerPosition);
-            yield return null;
-        }
-        _isRoutineActive = false;
-    }
 
     private Vector3 GetRoamingPosition()
     {
+        // Returns a random direction
+        // TODO: Stop monsters from choosing directions with either other monsters or walls
         return new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
     }
 
     private void FindTarget()
     {
-        float targetRange = 20f;
+        // If the player is within range, change the state to Chasing
+        float targetRange = 10f;
         if (Vector2.Distance(transform.position, _player.GetPosition()) < targetRange)
         {
             _state = State.Chasing;
         }
     }
 
-    private Vector3 GetPlayerPosition()
+    private void StopNearPlayer()
     {
-        return _player.GetPosition();
+        // If the player is within attack distance, change the state to Attacking
+        if (Vector2.Distance(transform.position, _player.GetPosition()) <= _attackDistance)
+        { 
+            _enemyPathFinding.StopMoving();
+            _state = State.Attacking;
+        }
     }
+
+    /// <summary>
+    /// Method for the Brute's melee attack
+    /// </summary>
+    private void MeleeAttack()
+    {
+
+    }
+    /// <summary>
+    /// Method for the Wraith's ranged attack
+    /// </summary>
+    private void RangedAttack()
+    {
+
+    }
+
 }

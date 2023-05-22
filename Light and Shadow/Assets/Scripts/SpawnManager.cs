@@ -17,6 +17,7 @@ public class SpawnManager : MonoBehaviour
         
         //StartSpawning();
         Instantiate(_monsterPrefabs[1], _spawnPoints[0]);
+        Instantiate(_monsterPrefabs[0], _spawnPoints[0]);
     }
 
     public void StartSpawning()

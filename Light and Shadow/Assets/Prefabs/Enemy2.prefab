@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8620f631921d4b146a9f9e8c837a48cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 1
+  _moveSpeed: 2
 --- !u!114 &-859478604478665754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,8 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da0cecdd47166004386b389bcd0c8309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _attackDistance: 3
   _baseDamage: 2
   _darkDamage: 4
+  _monsterID: 1
 --- !u!50 &-7458398572437196901
 Rigidbody2D:
   serializedVersion: 4
