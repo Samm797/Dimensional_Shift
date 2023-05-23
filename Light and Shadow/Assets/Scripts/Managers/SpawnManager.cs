@@ -13,11 +13,11 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
-        _waveNumber = _gameManager.GetWaveNumber();
+        _waveNumber = _gameManager.WaveNumber;
         
-        //StartSpawning();
+        StartSpawning();
         //Instantiate(_monsterPrefabs[1], _spawnPoints[0]);
-        Instantiate(_monsterPrefabs[0], _spawnPoints[0]);
+        //Instantiate(_monsterPrefabs[0], _spawnPoints[0]);
     }
 
     public void StartSpawning()
@@ -26,7 +26,7 @@ public class SpawnManager : MonoBehaviour
         switch (_waveNumber)
         {
             case 0:
-                break;
+                return;
             case 1:
                 numberToSpawn = 10;
                 break;
