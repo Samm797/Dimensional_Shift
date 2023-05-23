@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Shift") && Time.time > _canShift)
         {
             DimensionShift();
-            Debug.Log(_colorManager.IsDarkActive());
+            Debug.Log(_colorManager.IsDarkActive);
         }
     }
 

@@ -7,7 +7,8 @@ public class ColorManager : MonoBehaviour
 {
     private bool _isDarkActive;
     private ColorChanger[] _colorChangers;
-    // private List<ColorChanger> _colorChangers;
+
+    public bool IsDarkActive { get { return _isDarkActive; } }
     
     // Start is called before the first frame update
     void Start()
@@ -49,10 +50,5 @@ public class ColorManager : MonoBehaviour
         
         _isDarkActive = !_isDarkActive;
         yield break;
-    }
-
-    public bool IsDarkActive()
-    {
-        return _isDarkActive;
     }
 }

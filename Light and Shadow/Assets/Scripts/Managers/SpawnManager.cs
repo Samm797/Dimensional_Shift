@@ -16,7 +16,7 @@ public class SpawnManager : MonoBehaviour
         _waveNumber = _gameManager.GetWaveNumber();
         
         //StartSpawning();
-        Instantiate(_monsterPrefabs[1], _spawnPoints[0]);
+        //Instantiate(_monsterPrefabs[1], _spawnPoints[0]);
         Instantiate(_monsterPrefabs[0], _spawnPoints[0]);
     }
 

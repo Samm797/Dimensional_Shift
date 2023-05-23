@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using UnityEngine;
 
 public class EnemyPathfinding : MonoBehaviour
@@ -24,20 +25,20 @@ public class EnemyPathfinding : MonoBehaviour
         }
         // else move to the MoveDirection
         _rb.MovePosition((Vector3)_rb.position + (Time.fixedDeltaTime * _moveSpeed * _moveDirection));
+
     }
 
-    public void MoveToRandom(Vector3 targetPosition)
+    public void MoveToLocation(Vector3 targetPosition)
     {
         // Ensure the monster is moving and then move toward the target position
         _isMoving = true;
         _moveDirection = targetPosition.normalized;
     }
 
-    public void MoveToPlayer(Vector3 targetPosition)
+
+    public Vector3 GetMoveDirection()
     {
-        // Ensure the monster is moving and then move toward the direction of the player 
-        _isMoving = true;
-        _moveDirection = (targetPosition - transform.position).normalized;
+        return _moveDirection;
     }
 
     public void StopMoving()
