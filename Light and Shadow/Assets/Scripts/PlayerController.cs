@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
     private float _castCooldown = 1f;
     private HealthSystem _healthSystem;
 
-
     // Spell direction
     private Camera _camera;
 
@@ -29,6 +28,9 @@ public class PlayerController : MonoBehaviour
     private ColorManager _colorManager;
     private float _canShift = -0.5f;
     private float _shiftCooldown = 2f;
+
+    // Communication
+    private GameManager _gameManager;
 
 
 
@@ -47,8 +49,11 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("The player Collider2D is NULL.");
         }
 
-        _activeMoveSpeed = _moveSpeed;
-        _camera = Camera.main;
+        _healthSystem = GetComponent<HealthSystem>();
+        if (_healthSystem == null)
+        {
+            Debug.LogError("The player HealthSystem is NULL.");
+        }
 
         _colorManager = GameObject.Find("Color_Manager").GetComponent<ColorManager>();
         if (_colorManager == null)
@@ -56,7 +61,14 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("The ColorManager for the player is NULL.");
         }
 
-        _healthSystem = GetComponent<HealthSystem>();
+        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        if (_colorManager == null)
+        {
+            Debug.LogError("The GameManager for the player is NULL.");
+        }
+
+        _activeMoveSpeed = _moveSpeed;
+        _camera = Camera.main;
     }
     private void FixedUpdate()
     {
@@ -67,6 +79,12 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (_healthSystem.CurrentHealth <= 0)
+        {
+            _gameManager.isPlayerDead = true;
+            _gameManager.GameOverSequence();
+        }
+
         Dash();
 
         // Mouse 0, making this so I can utilize different inputs easier later if wanted

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 public class EnemyAI : MonoBehaviour
@@ -16,7 +17,7 @@ public class EnemyAI : MonoBehaviour
     private bool _isRoutineActive;
     private PlayerController _player;
     [SerializeField] private float _attackDistance;
-    private int _rayLengthForRandomMovement = 10, _rayLengthForCollision = 10;
+    private int _rayLengthForRandomMovement = 10, _rayLengthForCollision = 5, _avoidanceThreshold = 4;
     private Rigidbody2D _rb;
     private int _randomNumberCounter;
 
@@ -27,6 +28,9 @@ public class EnemyAI : MonoBehaviour
     private int _currentDamage;
     private ColorManager _colorManager;
     [SerializeField] private int _monsterID;
+
+    // Housekeeping
+    private WaveManager _waveManager;
 
 
     
@@ -58,7 +62,12 @@ public class EnemyAI : MonoBehaviour
         {
             Debug.LogError("The Monster's Rigidbody2D is NULL.");
         }
-        
+        _waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
+        if (_waveManager == null)
+        {
+            Debug.LogError("Enemies' Game Manager is NULL.");
+        }
+
         // Set current damage to base damage as long as the dark is inactive
         if (_colorManager.IsDarkActive == false)
         {
@@ -103,7 +112,7 @@ public class EnemyAI : MonoBehaviour
 
                 // Get the players position on each physics update and move towards the player 
                 // The function implements the pathfinding to avoid obstacles
-                Vector3 movePosition = GetPlayerPosition();
+                Vector3 movePosition = GetPlayerPositionModified();
                 _enemyPathFinding.MoveToLocation(movePosition);
                 // Using this as a placeholder for the moment, just stops the enemies
                 StopNearPlayer();
@@ -126,9 +135,11 @@ public class EnemyAI : MonoBehaviour
             _currentDamage = _darkDamage;
         }
 
-        if (_healthSystem.CurrentHealth <= 0)
+        if (_healthSystem.CurrentHealth == 0)
         {
-            Destroy(this.gameObject);
+            // Tell the gameManager to remove the monster and destroy itself
+            _waveManager.EnemyDestroyed();
+            Destroy(gameObject);
         }
     }
 
@@ -175,7 +186,7 @@ public class EnemyAI : MonoBehaviour
         _isRoutineActive = false;
     }
 
-   
+
     private Vector3 GetPlayerPosition()
     {
         Vector3 direction = (_player.GetPosition() - transform.position).normalized;
@@ -190,7 +201,7 @@ public class EnemyAI : MonoBehaviour
         // Shift the direction vector by 45 degrees
         Vector3 left45 = ShiftVector45Degrees(direction, true);
         Vector3 right45 = ShiftVector45Degrees(direction, false);
-        
+
         // Fire out 2 rays, left and right and compare distances between the objects
         RaycastHit2D hitInfoLeft = Physics2D.Raycast(transform.position, left45, _rayLengthForCollision, LayerMask.GetMask("Obstacle"));
         RaycastHit2D hitInfoRight = Physics2D.Raycast(transform.position, right45, _rayLengthForCollision, LayerMask.GetMask("Obstacle"));
@@ -214,6 +225,44 @@ public class EnemyAI : MonoBehaviour
             direction = left45;
             return direction;
         }
+    }
+
+    private Vector3 GetPlayerPositionModified()
+    {
+        // The direction to the player
+        Vector3 direction = (_player.GetPosition() - transform.position).normalized;
+        Debug.DrawRay(transform.position, direction * _rayLengthForCollision, Color.red, 0f);
+
+        Vector3 left45 = ShiftVector45Degrees(direction, true);
+        Vector3 right45 = ShiftVector45Degrees(direction, false);
+
+        bool obstacleInFront = DidRaycastHit(_rayLengthForCollision, direction);
+        bool obstacleOnLeft = DidRaycastHit(_avoidanceThreshold, left45);
+        bool obstacleOnRight = DidRaycastHit(_avoidanceThreshold, right45);
+        Debug.DrawRay(transform.position, left45 * _avoidanceThreshold, Color.green, 0f);
+        Debug.DrawRay(transform.position, right45 * _avoidanceThreshold, Color.blue, 0f);
+
+        // If there's nothing in front of the monster
+        if (!obstacleInFront && !obstacleOnLeft && !obstacleOnRight)
+        {
+            return direction;
+        }
+        else if (obstacleOnLeft && !obstacleOnRight)
+        {
+            direction = right45;
+            return direction;
+        } 
+        else if (!obstacleOnLeft && obstacleOnRight)
+        {
+            direction = left45;
+            return direction;
+        }
+        else if (obstacleOnLeft && obstacleOnRight)
+        {
+            direction = ShiftVector45Degrees(left45, true); 
+            return direction;   
+        }
+        return direction;
     }
 
     private Vector3 GetRoamingPosition()

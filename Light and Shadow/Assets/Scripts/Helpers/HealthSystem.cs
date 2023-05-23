@@ -14,20 +14,13 @@ public class HealthSystem : MonoBehaviour
         _currentHealth = _maxHealth;
     }
 
-
     public void Damage(int amount)
     {
         _currentHealth -= amount;
-        Debug.Log($"{this.name}'s current health: {_currentHealth}.");  
 
         if (_currentHealth <= 0)
         {
-            Death();
+            _currentHealth = 0;
         }
-    }
-
-    public void Death()
-    {
-        Debug.Log($"{this.name} has died. :(");
     }
 }
