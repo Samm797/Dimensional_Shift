@@ -391,8 +391,8 @@ public class EnemyAI : MonoBehaviour
             newSpell.transform.parent = _spellContainer.transform;
             newSpell.GetComponent<MoveSpellTowardsPlayer>().damage = _currentDamage;
         }
-        
     }
+
 
     /// <summary>
     /// Shifts a Vector3 by a 45 degree angle. Use true for left, false for right. 

@@ -11,16 +11,17 @@ public class FlipEnemy : MonoBehaviour
     private void Awake()
     {
         _facingRight = true;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (enemy.MoveDirection.x >= 0.01f && !_facingRight)
+        if (enemy.MoveDirection.x >= 0.01f && _facingRight)
         {
             FlipMonster();
         }
-        else if (enemy.MoveDirection.x <= -0.01f && _facingRight)
+        else if (enemy.MoveDirection.x <= -0.01f && !_facingRight)
         {
             FlipMonster();
         }

@@ -10,6 +10,7 @@ public class MoveSpellTowardsPlayer : MonoBehaviour
     private Vector3 _initialDirection;
     private int _damage;
 
+
     public int damage
     {
         get { return _damage; }
