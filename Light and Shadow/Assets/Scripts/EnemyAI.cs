@@ -13,38 +13,45 @@ public class EnemyAI : MonoBehaviour
         Attacking
     }
     private State _state;
-    private EnemyPathfinding _enemyPathFinding;
     private bool _isRoutineActive;
     private PlayerController _player;
-    [SerializeField] private float _attackDistance;
     private int _rayLengthForRandomMovement = 10, _rayLengthForCollision = 5, _avoidanceThreshold = 4;
     private Rigidbody2D _rb;
     private int _randomNumberCounter;
+    [SerializeField] private float _moveSpeed;
+    private Vector3 _moveDirection;
+    private bool _isMoving;
+    private Vector3 _targetPosition;
+    private float _minDistanceToTargetPosition = 0.5f;
 
-    // Health and damage
+
+    // Combat
     private HealthSystem _healthSystem;
     [SerializeField] private int _baseDamage;
     [SerializeField] private int _darkDamage;
-    private int _currentDamage;
     private ColorManager _colorManager;
     [SerializeField] private int _monsterID;
 
-    // Housekeeping
+    // Attacking
+    private int _currentDamage;
+    [SerializeField] private GameObject _spellPrefab;
+    private GameObject _spellContainer;
+    public Transform attackPoint;
+    public LayerMask playerLayer;
+    [SerializeField] private float _attackDistance;
+    private HealthSystem _playerHealth;
+
+    // Communicating with Managers
     private WaveManager _waveManager;
-
-
-    
-
 
     // Start is called before the first frame update
     void Start()
     {
-        _player = GameObject.Find("Player").GetComponent<PlayerController>();
-        if (_player == null )
+        _playerHealth = _player.GetComponent<HealthSystem>();
+        if ( _playerHealth == null )
         {
-            Debug.LogError("The Monster's target is NULL.");
+            Debug.LogError("The Monster's PlayerHealth is NULL.");
         }
-
         _healthSystem = GetComponent<HealthSystem>();
         if (_healthSystem == null )
         {
@@ -85,42 +92,73 @@ public class EnemyAI : MonoBehaviour
 
     private void Awake()
     {
-        // Initialize the pathfinding script and set the state to roaming at the start
-        _enemyPathFinding = GetComponent<EnemyPathfinding>();
+        // Initialize the Rigidbody2D and set the state to roaming at the start
+        _rb = GetComponent<Rigidbody2D>();
         _state = State.Roaming;
+
+        
+        _player = GameObject.Find("Player").GetComponent<PlayerController>();
+        if (_player == null)
+        {
+            Debug.LogError("The Monster's target is NULL.");
+        }
+
+        _spellContainer = GameObject.Find("Spell_Container");
     }
 
     private void FixedUpdate()
     {
+
         // Checks the current state as a switch
         switch (_state)
         {
             default:
             case State.Roaming:
-                //Debug.Log("Roaming");
-
-                // If this is not checked, the Coroutine is called on every frame and the enemy will not mov
+                // If this is not checked, the Coroutine is called on every frame and the enemy will not move
                 if (_isRoutineActive == false)
                 {
                     StartCoroutine(RoamingRoutine());
                 }
-                // Ensures that the enemy is looking for the player while randomly roaming
+                // If the enemy gets close enough to the player, the State changes to "Chasing"
+                // TODO: Set this to automatically find the player after a certain Time.FixedDeltaTime
                 FindTarget();
                 break;
             case State.Chasing:
-                //Debug.Log("Chasing");
-
-                // Get the players position on each physics update and move towards the player 
                 // The function implements the pathfinding to avoid obstacles
-                Vector3 movePosition = GetPlayerPositionModified();
-                _enemyPathFinding.MoveToLocation(movePosition);
-                // Using this as a placeholder for the moment, just stops the enemies
-                StopNearPlayer();
+                _targetPosition = GetPlayerPosition();
+                MoveToLocation(_targetPosition);
+                // If the enemy is close enough to the player, the State changes to "Attacking"
+                IsPlayerInAttackRange();
                 break;
             case State.Attacking:
-                //Debug.Log("Attacking");
+                _targetPosition = GetAttackPosition();
+                MoveToLocation(_targetPosition);
                 break;
         }
+        if (_isMoving)
+        {
+            // This is manuay set and shoudn't work like this, but to get the enemy to follow the player properly, we have to take one extra setp in the GetAttackPosition() method
+            // Setting the _targetPosition to this value
+            _targetPosition = (_player.GetPosition() - ((_player.GetPosition() - transform.position).normalized) * _attackDistance);
+            float distanceToTarget = Vector3.Distance(transform.position, _targetPosition);
+            if ( distanceToTarget <= _minDistanceToTargetPosition)
+            {
+                //MeleeAttack();
+                //RangedAttack();
+                StopMoving();
+                return;
+            }
+
+            _rb.MovePosition((Vector3)_rb.position + (Time.fixedDeltaTime * _moveSpeed * _moveDirection));
+
+        }
+        else
+        {
+            _rb.velocity = Vector3.zero;
+            _rb.angularVelocity = 0f;
+            return;
+        }
+
 
     }
     // Update is called once per frame
@@ -137,7 +175,7 @@ public class EnemyAI : MonoBehaviour
 
         if (_healthSystem.CurrentHealth == 0)
         {
-            // Tell the gameManager to remove the monster and destroy itself
+            // Tells the gameManager the enemy was destroyed and then destroys itself
             _waveManager.EnemyDestroyed();
             Destroy(gameObject);
         }
@@ -159,6 +197,8 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
+
+        // Only called while the player is dashing
         if (other.CompareTag("Player"))
         {
             // If dark is not active, do 2 damage to enemies
@@ -180,54 +220,13 @@ public class EnemyAI : MonoBehaviour
         while (_state == State.Roaming)
         {
             Vector3 roamPosition = GetRoamingPosition();
-            _enemyPathFinding.MoveToLocation(roamPosition);
+            MoveToLocation(roamPosition);
             yield return new WaitForSeconds(2f);
         }
         _isRoutineActive = false;
     }
 
-
     private Vector3 GetPlayerPosition()
-    {
-        Vector3 direction = (_player.GetPosition() - transform.position).normalized;
-        //Debug.DrawRay(transform.position, direction * _rayLengthForCollision, Color.red, 0f);
-        // If there is nothing in front the monster
-        if (!DidRaycastHit(_rayLengthForCollision, direction))
-        {
-            // Move toward the player
-            return direction;
-        }
-
-        // Shift the direction vector by 45 degrees
-        Vector3 left45 = ShiftVector45Degrees(direction, true);
-        Vector3 right45 = ShiftVector45Degrees(direction, false);
-
-        // Fire out 2 rays, left and right and compare distances between the objects
-        RaycastHit2D hitInfoLeft = Physics2D.Raycast(transform.position, left45, _rayLengthForCollision, LayerMask.GetMask("Obstacle"));
-        RaycastHit2D hitInfoRight = Physics2D.Raycast(transform.position, right45, _rayLengthForCollision, LayerMask.GetMask("Obstacle"));
-        //Debug.DrawRay(transform.position, left45 * _rayLengthForCollision, Color.green, 0f);
-        //Debug.DrawRay(transform.position, right45 * _rayLengthForCollision, Color.blue, 0f);
-
-        // Compare the distance between hits
-        float leftDistance = hitInfoLeft.distance;
-        float rightDistance = hitInfoRight.distance;
-        float furthestFromObstacle = Mathf.Max(leftDistance, rightDistance);
-
-        // If the left is furthest 
-        if (furthestFromObstacle == leftDistance)
-        {
-            // Go right
-            direction = right45;
-            return direction;
-        }
-        else
-        {
-            direction = left45;
-            return direction;
-        }
-    }
-
-    private Vector3 GetPlayerPositionModified()
     {
         // The direction to the player
         Vector3 direction = (_player.GetPosition() - transform.position).normalized;
@@ -309,6 +308,15 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    private Vector3 GetAttackPosition()
+    {
+        Vector3 direction = (_player.GetPosition() - transform.position).normalized;
+        Vector3 attackPosition = _player.GetPosition() - direction * _attackDistance;
+
+        Vector3 moveDirection = (attackPosition - transform.position).normalized;
+        return moveDirection;
+    }
+
     private void FindTarget()
     {
         // If the player is within range, change the state to Chasing
@@ -319,29 +327,44 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void StopNearPlayer()
+    private void IsPlayerInAttackRange()
     {
         // If the player is within attack distance, change the state to Attacking
         if (Vector2.Distance(transform.position, _player.GetPosition()) <= _attackDistance)
-        { 
-            //_enemyPathFinding.StopMoving();
-            //_state = State.Attacking;
+        {
+            _state = State.Attacking;
         }
     }
 
     /// <summary>
-    /// Method for the Brute's melee attack
+    /// Method for a melee attack
     /// </summary>
     private void MeleeAttack()
     {
-
+        Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, _attackDistance, playerLayer);
+        if (hitPlayer)
+        {
+            _playerHealth.Damage(_currentDamage);
+        }
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+        {
+            return;
+        }
+        Gizmos.DrawWireSphere(attackPoint.position, _attackDistance);
+    }
+
     /// <summary>
-    /// Method for the Wraith's ranged attack
+    /// Method for a ranged attack
     /// </summary>
     private void RangedAttack()
     {
-
+        GameObject newSpell = Instantiate(_spellPrefab, transform.position, Quaternion.identity);
+        newSpell.transform.parent = _spellContainer.transform;
+        newSpell.GetComponent<MoveSpellTowardsPlayer>().damage = _currentDamage;
     }
 
     /// <summary>
@@ -375,6 +398,20 @@ public class EnemyAI : MonoBehaviour
             return true;
         }
         return false;
+    }
+    private void MoveToLocation(Vector3 targetPosition)
+    {
+        // Ensure the monster is moving and then move toward the target position
+        _isMoving = true;
+        _moveDirection = targetPosition.normalized;
+    }
+
+
+    private void StopMoving()
+    {
+        // Stop movement
+        _isMoving = false;
+        Debug.Log("StopMoving()");
     }
 }
 

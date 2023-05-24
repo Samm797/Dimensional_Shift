@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     private float _canShift = -0.5f;
     private float _shiftCooldown = 2f;
 
-    // Communication
+    // Communicating with Managers
     private GameManager _gameManager;
 
 
@@ -143,7 +143,9 @@ public class PlayerController : MonoBehaviour
     {
         return transform.position;
     }
-
+    /// <summary>
+    /// Damages any enemy you hit while this is active. The damage is handled on the EnemyAI script
+    /// </summary>
     private void Dash()
     {
         // L Shift 
@@ -174,7 +176,7 @@ public class PlayerController : MonoBehaviour
             {
                 // Set us back to normal
                 _collider.isTrigger = false;
-                _rb.SetRotation(90);
+                _rb.SetRotation(0);
                 _rb.freezeRotation = true;
 
                 // Active speed is now our normal move speed, and our cooldowncounter begins
@@ -206,4 +208,13 @@ public class PlayerController : MonoBehaviour
         // Set the velocity to this amount instead of whatever would have been done
         _rb.velocity = neededVelocity;
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("MonsterSpell"))
+        {
+            _healthSystem.Damage(other.GetComponent<MoveSpellTowardsPlayer>().damage);
+        }
+    }
+
 }

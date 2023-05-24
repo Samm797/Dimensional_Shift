@@ -21,12 +21,14 @@ public class GameManager : MonoBehaviour
     {
         if (_didPlayerWin == true)
         {
+            // This portion returns because if the player would die the same frame as winning, the player counts as winning
             Debug.Log("You have saved us all!");
+            return;
         }
 
         if (_isPlayerDead == true)
         {
-
+            Debug.Log("Ded");
         }
     }
 }

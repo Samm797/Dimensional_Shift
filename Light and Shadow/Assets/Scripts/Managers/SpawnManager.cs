@@ -3,10 +3,13 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    // Spawning
     [SerializeField] private GameObject[] _monsterPrefabs;
     [SerializeField] private Transform[] _spawnPoints;
     [SerializeField] private GameObject _monsterContainer;
-    private int _numberToSpawn, _waveNumber;
+    private int _numberToSpawn;
+
+    // Communication with other Managers
     [SerializeField] private WaveManager _waveManager;
 
     // Start is called before the first frame update
@@ -18,7 +21,8 @@ public class SpawnManager : MonoBehaviour
         }
         
         //Instantiate(_monsterPrefabs[1], _spawnPoints[0]);
-        //Instantiate(_monsterPrefabs[0], _spawnPoints[0]);
+        GameObject dave = Instantiate(_monsterPrefabs[0], _spawnPoints[0]);
+        dave.transform.parent = _monsterContainer.transform;
     }
 
     public void StartSpawning(int wave)

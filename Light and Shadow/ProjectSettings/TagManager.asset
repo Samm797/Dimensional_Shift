@@ -8,6 +8,8 @@ TagManager:
   - Monster
   - Boss
   - Obstacle
+  - MonsterWeapon
+  - MonsterSpell
   layers:
   - Default
   - TransparentFX
