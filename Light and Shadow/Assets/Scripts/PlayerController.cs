@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -16,13 +17,21 @@ public class PlayerController : MonoBehaviour
     // Combat
     [SerializeField] private GameObject _spellPrefab;
     [SerializeField] private GameObject _spellContainer;
+    private Vector3 _spellOffset = new Vector3(-0.2f, 1.5f, 0f);
     private float _spellSpeed = 30f;
     private float _canCast = -0.5f;
     private float _castCooldown = 1f;
     private HealthSystem _healthSystem;
 
-    // Spell direction
+    // Spell and Player direction
     private Camera _camera;
+    public GameObject rotationPoint;
+    public SpriteRenderer leftArm;
+    public SpriteRenderer leftHand;
+    public SpriteRenderer rightArm;
+    public SpriteRenderer leftLeg;
+    public SpriteRenderer rightLeg;
+    private bool _facingRight;
 
     // Dimension shifting
     private ColorManager _colorManager;
@@ -66,10 +75,17 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("The GameManager for the player is NULL.");
         }
-
+        
         _activeMoveSpeed = _moveSpeed;
         _camera = Camera.main;
-    }
+        rotationPoint.transform.rotation = Quaternion.Euler(0, 180f, 0f);
+        leftArm.sortingOrder = 1;
+        leftHand.sortingOrder = 2;
+        rightArm.sortingOrder = -1;
+        leftLeg.sortingOrder = -1;
+        rightLeg.sortingOrder = -1;
+        _facingRight = true;
+}
     private void FixedUpdate()
     {
         MovePlayer();
@@ -79,6 +95,19 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0;
+
+        // Flip the player based on the mousePos
+        if (mousePos.x > transform.position.x && !_facingRight)
+        {
+            FlipPlayer();
+        }
+        else if (mousePos.x < transform.position.x &&  _facingRight)
+        {
+            FlipPlayer();
+        }
+
         if (_healthSystem.CurrentHealth <= 0)
         {
             _gameManager.isPlayerDead = true;
@@ -87,12 +116,11 @@ public class PlayerController : MonoBehaviour
 
         Dash();
 
-        // Mouse 0, making this so I can utilize different inputs easier later if wanted
+        // Mouse 0, making this "Fire1" so I can utilize different inputs easier later if wanted
         if (Input.GetButtonDown("Fire1") && Time.time > _canCast)
         {
             // Find the mouse position and set the z coordinate to 0
-            Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0;
+            
             
             // Sets the direction vector to the mouse position for aiming purposes
             Vector3 difference = mousePos - transform.position;
@@ -109,6 +137,8 @@ public class PlayerController : MonoBehaviour
         {
             DimensionShift();
         }
+
+        
     }
 
     private void MovePlayer()
@@ -124,7 +154,7 @@ public class PlayerController : MonoBehaviour
     {
         _canCast = Time.time + _castCooldown;
         // Instantiates a spell with a direction and speel, sets the velocity, and puts it in the Spawn_Manager in the hierarchy
-        GameObject spell = Instantiate(_spellPrefab, transform.position, Quaternion.identity);
+        GameObject spell = Instantiate(_spellPrefab, transform.position + _spellOffset, Quaternion.identity);
         spell.GetComponent<Rigidbody2D>().velocity = target * speed;
         spell.transform.parent = _spellContainer.transform;
     }
@@ -211,10 +241,17 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("MonsterSpell"))
+        if (other.CompareTag("MonsterSpell") && _dashCounter <= 0)
         {
             _healthSystem.Damage(other.GetComponent<MoveSpellTowardsPlayer>().damage);
+            Debug.Log("Took Damage");
         }
     }
 
+
+    private void FlipPlayer()
+    {
+        rotationPoint.transform.Rotate(0f, 180f, 0f);
+        _facingRight = !_facingRight;
+    }
 }

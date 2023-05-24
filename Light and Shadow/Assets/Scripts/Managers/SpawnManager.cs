@@ -21,8 +21,8 @@ public class SpawnManager : MonoBehaviour
         }
         
         //Instantiate(_monsterPrefabs[1], _spawnPoints[0]);
-        GameObject dave = Instantiate(_monsterPrefabs[0], _spawnPoints[0]);
-        dave.transform.parent = _monsterContainer.transform;
+        //GameObject dave = Instantiate(_monsterPrefabs[0], _spawnPoints[0]);
+        //dave.transform.parent = _monsterContainer.transform;
     }
 
     public void StartSpawning(int wave)

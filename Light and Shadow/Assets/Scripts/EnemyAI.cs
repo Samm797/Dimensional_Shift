@@ -24,22 +24,30 @@ public class EnemyAI : MonoBehaviour
     private Vector3 _targetPosition;
     private float _minDistanceToTargetPosition = 0.5f;
 
+    public Vector3 MoveDirection { get { return _moveDirection; } }
+
 
     // Combat
     private HealthSystem _healthSystem;
     [SerializeField] private int _baseDamage;
     [SerializeField] private int _darkDamage;
     private ColorManager _colorManager;
+    /// <summary>
+    /// 0 = mage; 1 = bruiser;
+    /// </summary>
     [SerializeField] private int _monsterID;
 
     // Attacking
     private int _currentDamage;
     [SerializeField] private GameObject _spellPrefab;
     private GameObject _spellContainer;
+    private Vector3 _spellOffset;
     public Transform attackPoint;
     public LayerMask playerLayer;
     [SerializeField] private float _attackDistance;
     private HealthSystem _playerHealth;
+    private float _rangedCooldown = 0.5f, _meleeCooldown = 0.5f;
+    private float _canCast = -0.5f, _canMelee = -0.5f;
 
     // Communicating with Managers
     private WaveManager _waveManager;
@@ -131,6 +139,7 @@ public class EnemyAI : MonoBehaviour
                 IsPlayerInAttackRange();
                 break;
             case State.Attacking:
+                RangedAttack(); 
                 _targetPosition = GetAttackPosition();
                 MoveToLocation(_targetPosition);
                 break;
@@ -143,8 +152,6 @@ public class EnemyAI : MonoBehaviour
             float distanceToTarget = Vector3.Distance(transform.position, _targetPosition);
             if ( distanceToTarget <= _minDistanceToTargetPosition)
             {
-                //MeleeAttack();
-                //RangedAttack();
                 StopMoving();
                 return;
             }
@@ -362,15 +369,35 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private void RangedAttack()
     {
-        GameObject newSpell = Instantiate(_spellPrefab, transform.position, Quaternion.identity);
-        newSpell.transform.parent = _spellContainer.transform;
-        newSpell.GetComponent<MoveSpellTowardsPlayer>().damage = _currentDamage;
+        Debug.Log("RangedAttack()");
+        switch (_monsterID)
+        {
+            default:
+                Debug.LogError("Default case reached in 'RangedAttack()' method.");
+                break;
+            case 0:
+                _spellOffset = new Vector3(-0.5f, 2f, 0f);
+                break;
+            case 1:
+                _spellOffset = new Vector3(0f, 0.8f, 0f);
+                break; 
+        }
+
+        if (Time.time > _canCast)
+        {
+            _canCast = Time.time + _rangedCooldown;
+
+            GameObject newSpell = Instantiate(_spellPrefab, transform.position + _spellOffset, Quaternion.identity);
+            newSpell.transform.parent = _spellContainer.transform;
+            newSpell.GetComponent<MoveSpellTowardsPlayer>().damage = _currentDamage;
+        }
+        
     }
 
     /// <summary>
     /// Shifts a Vector3 by a 45 degree angle. Use true for left, false for right. 
     /// </summary>
-    /// <param name="direction">Initial direction you are shifting</param>
+    /// <param name="direction">Initial direction you are shifting from</param>
     /// <param name="isLeft">true for shifting left, false for shifting right</param>
     /// <returns>A new Vector 3 with a 45 deg shift from the initial Vector3.</returns>
     private Vector3 ShiftVector45Degrees(Vector3 direction, bool isLeft)
@@ -411,6 +438,7 @@ public class EnemyAI : MonoBehaviour
     {
         // Stop movement
         _isMoving = false;
+        RangedAttack();
         Debug.Log("StopMoving()");
     }
 }

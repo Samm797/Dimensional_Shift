@@ -40,7 +40,7 @@ public class WaveManager : MonoBehaviour
         _activeEnemies = 0;
         _isRoutineActive = false;
 
-        //NextWave();
+        NextWave();
     }
     
 
