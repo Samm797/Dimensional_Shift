@@ -13,8 +13,10 @@ public class WaveManager : MonoBehaviour
     private int _activeEnemies;
     private bool _isRoutineActive;
 
+    //Communication with other Managers
     private SpawnManager _spawnManager;
     private GameManager _gameManager;
+    private UIManager _uiManager;
 
     // Would like to convert this to a getter/setter where you can decrement and do the job of the two functions below through this.
     // Will work on that later.
@@ -35,12 +37,15 @@ public class WaveManager : MonoBehaviour
         {
             Debug.LogError("The Wave Manager's game manager is NULL.");
         }
+        _uiManager = GameObject.Find("UI_Manager").GetComponent<UIManager>();
+        if (_uiManager == null)
+        {
+            Debug.LogError("The Wave Manager's game manager is NULL.");
+        }
 
         _waveNumber = 0;
         _activeEnemies = 0;
         _isRoutineActive = false;
-
-        NextWave();
     }
     
 
@@ -72,7 +77,10 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-
+    public void NextWavePublic()
+    {
+        NextWave();
+    }
 
     private void NextWave()
     {
@@ -95,7 +103,7 @@ public class WaveManager : MonoBehaviour
         // Do something different on the first wave
         if (_waveNumber == 1)
         {
-            Debug.Log($"Wave #{_waveNumber} Start!");
+            StartCoroutine(Wait3Seconds());
             _spawnManager.StartSpawning(_waveNumber);
             return;
         }
@@ -104,6 +112,11 @@ public class WaveManager : MonoBehaviour
             StartCoroutine(InBetweenWaves());
         }
         // Wait 3.5 seconds 
+    }
+
+    private IEnumerator Wait3Seconds()
+    {
+        yield return new WaitForSeconds(3);
     }
 
     private IEnumerator InBetweenWaves()
@@ -119,6 +132,7 @@ public class WaveManager : MonoBehaviour
         Debug.Log("1");
         yield return new WaitForSeconds(1);
         Debug.Log($"Wave #{_waveNumber} Start!");
+        _uiManager.DisplayCurrentWave(_waveNumber);
         _spawnManager.StartSpawning(_waveNumber);
         _isRoutineActive = false;
         }

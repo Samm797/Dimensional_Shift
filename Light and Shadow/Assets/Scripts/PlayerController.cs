@@ -89,14 +89,12 @@ public class PlayerController : MonoBehaviour
         
         _activeMoveSpeed = _moveSpeed;
         _camera = Camera.main;
+
         rotationPoint.transform.rotation = Quaternion.Euler(0, 180f, 0f);
-        leftArm.sortingOrder = 1;
-        leftHand.sortingOrder = 2;
-        rightArm.sortingOrder = -1;
-        leftLeg.sortingOrder = -1;
-        rightLeg.sortingOrder = -1;
+
         _facingRight = true;
 }
+
     private void FixedUpdate()
     {
         MovePlayer();
