@@ -70,7 +70,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2034862831
+  m_SortingLayerID: 1532869463
   m_SortingLayer: 2
   m_SortingOrder: 3
   m_Sprite: {fileID: -296202108, guid: 0c1e734fa85636743af3bc22c6d99ba8, type: 3}
@@ -154,7 +154,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2034862831
+  m_SortingLayerID: 1532869463
   m_SortingLayer: 2
   m_SortingOrder: -1
   m_Sprite: {fileID: 1342394839, guid: 0c1e734fa85636743af3bc22c6d99ba8, type: 3}
@@ -253,15 +253,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 8
+  _animator: {fileID: 7023199007760294188}
   _baseDamage: 1
   _darkDamage: 2
   _monsterID: 0
-  _spellPrefab: {fileID: 8152842139207104699, guid: 60568ac2802aeb946a34c366c1a312b2, type: 3}
+  _spellPrefab: {fileID: 8152842139207104699, guid: d7f337a2551493944ba172534190aeec, type: 3}
   attackPoint: {fileID: 0}
   playerLayer:
     serializedVersion: 2
     m_Bits: 512
   _attackDistance: 6
+  _flip: {fileID: 788902895337673520}
 --- !u!50 &-7116384508619033549
 Rigidbody2D:
   serializedVersion: 4
@@ -386,7 +388,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2034862831
+  m_SortingLayerID: 1532869463
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 1977075802, guid: 0c1e734fa85636743af3bc22c6d99ba8, type: 3}
@@ -470,7 +472,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2034862831
+  m_SortingLayerID: 1532869463
   m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: 988959124, guid: 0c1e734fa85636743af3bc22c6d99ba8, type: 3}

@@ -261,7 +261,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("MonsterSpell") && _dashCounter <= 0)
         {
-            _healthSystem.Damage(other.GetComponent<MoveSpellTowardsPlayer>().damage);
+            _healthSystem.Damage(other.GetComponent<EnemySpellController>().damage);
             _animator.SetTrigger("damage");
         }
     }

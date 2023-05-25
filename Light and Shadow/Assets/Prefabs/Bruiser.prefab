@@ -70,7 +70,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2034862831
+  m_SortingLayerID: 1532869463
   m_SortingLayer: 2
   m_SortingOrder: -1
   m_Sprite: {fileID: 95412752, guid: 0c1e734fa85636743af3bc22c6d99ba8, type: 3}
@@ -171,6 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 5
+  _animator: {fileID: 4940191891370604289}
   _baseDamage: 2
   _darkDamage: 4
   _monsterID: 1
@@ -180,6 +181,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _attackDistance: 5
+  _flip: {fileID: 310940905}
 --- !u!50 &-6919864890030696467
 Rigidbody2D:
   serializedVersion: 4
@@ -301,7 +303,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2034862831
+  m_SortingLayerID: 1532869463
   m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: 95412752, guid: 0c1e734fa85636743af3bc22c6d99ba8, type: 3}
@@ -385,7 +387,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2034862831
+  m_SortingLayerID: 1532869463
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 1993016522, guid: 0c1e734fa85636743af3bc22c6d99ba8, type: 3}

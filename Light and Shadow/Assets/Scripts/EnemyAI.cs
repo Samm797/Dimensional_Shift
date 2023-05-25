@@ -23,6 +23,7 @@ public class EnemyAI : MonoBehaviour
     private bool _isMoving;
     private Vector3 _targetPosition;
     private float _minDistanceToTargetPosition = 0.5f;
+    [SerializeField] private Animator _animator;
 
     public Vector3 MoveDirection { get { return _moveDirection; } }
 
@@ -41,18 +42,20 @@ public class EnemyAI : MonoBehaviour
     private int _currentDamage;
     [SerializeField] private GameObject _spellPrefab;
     private GameObject _spellContainer;
-    private Vector3 _spellOffset;
+    private Vector3 _spellOffset, _spellOffset2, _spellOffset3;
     public Transform attackPoint;
     public LayerMask playerLayer;
     [SerializeField] private float _attackDistance;
     private HealthSystem _playerHealth;
     private float _rangedCooldown = 0.5f, _meleeCooldown = 0.5f;
-    private float _canCast = -0.5f, _canMelee = -0.5f;
+    private float _canCast = -1.5f;
+    private float _canMelee = -0.5f;
+    public FlipEnemy _flip;
 
     // Communicating with Managers
     private WaveManager _waveManager;
 
-    // Start is called before the first frame update
+
     void Start()
     {
         _playerHealth = _player.GetComponent<HealthSystem>();
@@ -77,6 +80,7 @@ public class EnemyAI : MonoBehaviour
         {
             Debug.LogError("The Monster's Rigidbody2D is NULL.");
         }
+
         _waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
         if (_waveManager == null)
         {
@@ -104,7 +108,12 @@ public class EnemyAI : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _state = State.Roaming;
 
-        
+        if (_animator == null)
+        {
+            Debug.LogError("The Monster's Animator is NULL.");
+        }
+
+
         _player = GameObject.Find("Player").GetComponent<PlayerController>();
         if (_player == null)
         {
@@ -146,7 +155,8 @@ public class EnemyAI : MonoBehaviour
         }
         if (_isMoving)
         {
-            // This is manuay set and shoudn't work like this, but to get the enemy to follow the player properly, we have to take one extra setp in the GetAttackPosition() method
+            _animator.SetBool("isMoving", true);
+            // This is manually set and shouldn't work like this, but to get the enemy to follow the player properly, we have to take one extra step in the GetAttackPosition() method
             // Setting the _targetPosition to this value
             _targetPosition = (_player.GetPosition() - ((_player.GetPosition() - transform.position).normalized) * _attackDistance);
             float distanceToTarget = Vector3.Distance(transform.position, _targetPosition);
@@ -163,6 +173,8 @@ public class EnemyAI : MonoBehaviour
         {
             _rb.velocity = Vector3.zero;
             _rb.angularVelocity = 0f;
+            _isMoving = false;
+            _animator.SetBool("isMoving", false);
             return;
         }
 
@@ -348,6 +360,7 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private void MeleeAttack()
     {
+        _animator.SetTrigger("attack");
         Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, _attackDistance, playerLayer);
         if (hitPlayer)
         {
@@ -369,6 +382,7 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private void RangedAttack()
     {
+
         Debug.Log("RangedAttack()");
         switch (_monsterID)
         {
@@ -376,20 +390,67 @@ public class EnemyAI : MonoBehaviour
                 Debug.LogError("Default case reached in 'RangedAttack()' method.");
                 break;
             case 0:
-                _spellOffset = new Vector3(-0.5f, 2f, 0f);
+                if (_flip.facingRight)
+                {
+                    _spellOffset = new Vector3(0.2f, 2f, 0f);
+                }
+                else
+                {
+                    _spellOffset = new Vector3(-0.2f, 2f, 0f);
+                }
                 break;
             case 1:
-                _spellOffset = new Vector3(0f, 0.8f, 0f);
+                if (_flip.facingRight)
+                {
+                    _spellOffset = new Vector3(-0.5f, 0.8f, 0f);
+                } 
+                else
+                {
+                    _spellOffset = new Vector3(0.5f, 0.8f, 0f);
+                }
                 break; 
         }
 
         if (Time.time > _canCast)
         {
             _canCast = Time.time + _rangedCooldown;
+            StartCoroutine(RangedAttackRoutine(_monsterID));
+        }
+    }
 
-            GameObject newSpell = Instantiate(_spellPrefab, transform.position + _spellOffset, Quaternion.identity);
-            newSpell.transform.parent = _spellContainer.transform;
-            newSpell.GetComponent<MoveSpellTowardsPlayer>().damage = _currentDamage;
+    /// <summary>
+    /// Used so the monsters can manipulate the spells before firing if possible
+    /// </summary>
+    /// <param name="monsterID">0 = mage; 1 = bruiser</param>
+    /// <returns></returns>
+    private IEnumerator RangedAttackRoutine(int monsterID)
+    {
+        _isRoutineActive = true;
+
+        while (_isRoutineActive)
+        {
+            switch (monsterID)
+            {
+                default:
+                    Debug.LogError("Default case reached in 'RangedAttackRoutine()' method.");
+                    yield break;
+                case 0:
+                    _animator.SetTrigger("attack");
+                    yield return new WaitForSeconds(1.2f);
+                    GameObject newSpellMage = Instantiate(_spellPrefab, transform.position + _spellOffset, Quaternion.identity);
+                    newSpellMage.transform.parent = _spellContainer.transform;
+                    newSpellMage.GetComponent<EnemySpellController>().damage = _currentDamage;
+                    _isRoutineActive = false;
+                    yield break;
+                case 1:
+                    _animator.SetTrigger("attack");
+                    yield return new WaitForSeconds(0.5f);
+                    GameObject newSpellBruiser = Instantiate(_spellPrefab, transform.position + _spellOffset, Quaternion.identity);
+                    newSpellBruiser.transform.parent = _spellContainer.transform;
+                    newSpellBruiser.GetComponent<EnemySpellController>().damage = _currentDamage;
+                    _isRoutineActive = false;
+                    yield break;
+            }
         }
     }
 
@@ -426,13 +487,13 @@ public class EnemyAI : MonoBehaviour
         }
         return false;
     }
+
     private void MoveToLocation(Vector3 targetPosition)
     {
         // Ensure the monster is moving and then move toward the target position
         _isMoving = true;
         _moveDirection = targetPosition.normalized;
     }
-
 
     private void StopMoving()
     {
