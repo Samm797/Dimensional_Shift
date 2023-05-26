@@ -1,21 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private bool _isPlayerDead = false, _didPlayerWin = false, _hasGameStarted = false;
+    private bool _isPlayerDead = false, _didPlayerWin = false, _hasGameplayStarted = false, _isGameOver = false;
 
     // Communication with other Managers
     private UIManager _uiManager;
     private WaveManager _waveManager;
 
-    public bool isPlayerDead { set { _isPlayerDead = value; } }
-    public bool didPlayerWin { set { _didPlayerWin = value; } }
+    public bool IsPlayerDead { set { _isPlayerDead = value; } }
+    public bool DidPlayerWin { set { _didPlayerWin = value; } }
 
     private void Start()
     {
-        
+
     }
 
     private void Awake()
@@ -25,32 +24,37 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("The UI Manager on the GameManager is NULL");
         }
-        
+
         _waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
         if (_waveManager == null)
         {
             Debug.LogError("The Wave Manager on the GameManager is NULL");
         }
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     private void Update()
     {
         // only works if the game hasn't started yet
-        if (!_hasGameStarted)
+        if (!_hasGameplayStarted)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(KeyCode.S))
             {
-                _hasGameStarted = true;
+                _hasGameplayStarted = true;
                 _waveManager.NextWavePublic();
                 _uiManager.StartPlayingSequence(_waveManager.WaveNumber);
             }
         }
 
-        if (_isPlayerDead)
+        if (_isPlayerDead || _didPlayerWin)
         {
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R) && _isGameOver == true)
             {
-
+                _isGameOver = false;
+                _isPlayerDead = false;
+                _isGameOver = false;
+                SceneManager.LoadScene(1);
             }
         }
 
@@ -61,6 +65,10 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void GameOver()
+    {
+        _isGameOver = true;
+    }
 
 
     /// <summary>
@@ -68,16 +76,23 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameOverSequence()
     {
-        if (_didPlayerWin == true)
+        if (_didPlayerWin)
         {
-            // This portion returns because if the player would die the same frame as winning, the player counts as winning
-            Debug.Log("You have saved us all!");
+            _uiManager.PlayerWon();
+            GameOver();
             return;
         }
 
-        if (_isPlayerDead == true)
+        if (_isPlayerDead)
         {
-            Debug.Log("Ded");
+            _uiManager.PlayerLost();
+            GameOver();
         }
+    }
+
+    public void EndlessOn()
+    {
+        // Hope to be implemented
+        Debug.Log("EndlessOn()");
     }
 }

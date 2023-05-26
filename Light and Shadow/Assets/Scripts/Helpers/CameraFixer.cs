@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraFixer : MonoBehaviour
 {
     public Transform player;
-    private float orthoSize = 8f, xDamping = 2f, yDamping = 1f, zDamping = 1f;
+    private float orthoSize = 8f;
 
     private Vector3 velocity = Vector3.zero;
     

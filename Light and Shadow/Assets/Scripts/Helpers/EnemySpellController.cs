@@ -19,15 +19,6 @@ public class EnemySpellController : MonoBehaviour
         }
     }
 
-    public Vector3 InitialDirection
-    {
-        get { return _initialDirection; }
-        set
-        {
-            _initialDirection = value;
-        }
-    }
-
     private void Awake()
     {
         _player = GameObject.Find("Player").GetComponent<Transform>();
@@ -40,11 +31,20 @@ public class EnemySpellController : MonoBehaviour
         _initialDirection = SetTarget(_player.position);
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (_initialDirection != Vector3.zero)
         {
             _rb.AddForce(_initialDirection * speed);
+        }
+    }
+
+    private void Update()
+    {
+        if (_player.position == null)
+        {
+            Destroy(this.gameObject);
+            return;
         }
     }
 

@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private float _canCast = -0.5f;
     private float _castCooldown = 1f;
     private HealthSystem _healthSystem;
+    private bool _playerDead = false;
 
     // Spell and Player direction
     private Camera _camera;
@@ -97,6 +98,10 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_playerDead)
+        {
+            return;
+        }
         MovePlayer();
 
         ClampXandY();
@@ -104,8 +109,14 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (_playerDead)
+        {
+            return;
+        }
+        
         Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
+
 
         // Flip the player based on the mousePos
         if (mousePos.x > transform.position.x && !_facingRight)
@@ -119,8 +130,9 @@ public class PlayerController : MonoBehaviour
 
         if (_healthSystem.CurrentHealth <= 0)
         {
-            _gameManager.isPlayerDead = true;
+            _gameManager.IsPlayerDead = true;
             _gameManager.GameOverSequence();
+            _playerDead = true;
         }
 
         

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -3182272101217455850}
   - component: {fileID: -544697977353731951}
   m_Layer: 0
-  m_Name: BruiserSpell
+  m_Name: Brute
   m_TagString: MonsterSpell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

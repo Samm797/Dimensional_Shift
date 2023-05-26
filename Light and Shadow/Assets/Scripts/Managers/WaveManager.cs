@@ -64,7 +64,6 @@ public class WaveManager : MonoBehaviour
     {
         _activeEnemies--;
 
-
         // Ensure that _activeEnemies is never negative
         if (_activeEnemies < 0)
         {
@@ -76,7 +75,9 @@ public class WaveManager : MonoBehaviour
             NextWave();
         }
     }
-
+    /// <summary>
+    /// Most likely this is not the correct way to do this, but I need to be able to call the next wave from another class and this is a solution.
+    /// </summary>
     public void NextWavePublic()
     {
         NextWave();
@@ -95,7 +96,7 @@ public class WaveManager : MonoBehaviour
         {
             _waveNumber = _FINALWAVE;
             // Implementation for a boss if time allows can go here
-            _gameManager.didPlayerWin = true;
+            _gameManager.DidPlayerWin = true;
             _gameManager.GameOverSequence();
             return;
         }
@@ -103,38 +104,37 @@ public class WaveManager : MonoBehaviour
         // Do something different on the first wave
         if (_waveNumber == 1)
         {
-            StartCoroutine(Wait3Seconds());
-            _spawnManager.StartSpawning(_waveNumber);
+            StartCoroutine(InitialWaveRoutine());
+            
             return;
         }
         else
         {
-            StartCoroutine(InBetweenWaves());
+            StartCoroutine(NextWavePreparationRoutine());
         }
-        // Wait 3.5 seconds 
     }
 
-    private IEnumerator Wait3Seconds()
-    {
-        yield return new WaitForSeconds(3);
-    }
-
-    private IEnumerator InBetweenWaves()
+    private IEnumerator InitialWaveRoutine()
     {
         _isRoutineActive = true;
-        while (_isRoutineActive == true)
+        while (_isRoutineActive)
         {
-        // Start a countdown
-        Debug.Log("3");
-        yield return new WaitForSeconds(1);        
-        Debug.Log("2");
-        yield return new WaitForSeconds(1);        
-        Debug.Log("1");
-        yield return new WaitForSeconds(1);
-        Debug.Log($"Wave #{_waveNumber} Start!");
-        _uiManager.DisplayCurrentWave(_waveNumber);
-        _spawnManager.StartSpawning(_waveNumber);
-        _isRoutineActive = false;
+            yield return new WaitForSeconds(3);
+            _spawnManager.StartSpawning(_waveNumber);
+            _isRoutineActive = false;
         }
+    }
+
+    private IEnumerator NextWavePreparationRoutine()
+    {
+        yield return new WaitForSeconds(3);
+        // UI Manager displays the countdown while resetting the number of monsters
+        _uiManager.WavePreparation(_waveNumber);
+        
+        // Update the top left wave
+        _uiManager.DisplayCurrentWave(_waveNumber);
+
+        // Start spawning the monsters
+        _spawnManager.StartSpawning(_waveNumber);
     }
 }

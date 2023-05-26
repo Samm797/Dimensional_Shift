@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 495720356490668234}
   - component: {fileID: 310940905}
   m_Layer: 10
-  m_Name: Bruiser
+  m_Name: Brute
   m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -34,7 +34,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private int _darkDamage;
     private ColorManager _colorManager;
     /// <summary>
-    /// 0 = mage; 1 = bruiser;
+    /// 0 = mage; 1 = brute;
     /// </summary>
     [SerializeField] private int _monsterID;
 
@@ -47,13 +47,15 @@ public class EnemyAI : MonoBehaviour
     public LayerMask playerLayer;
     [SerializeField] private float _attackDistance;
     private HealthSystem _playerHealth;
-    private float _rangedCooldown = 0.5f, _meleeCooldown = 0.5f;
+    private float _rangedCooldown = 0.5f;
+    // private float _meleeCooldown = 0.5f;
     private float _canCast = -1.5f;
-    private float _canMelee = -0.5f;
+    // private float _canMelee = -0.5f;
     public FlipEnemy _flip;
 
     // Communicating with Managers
     private WaveManager _waveManager;
+    private UIManager _uiManager;
 
 
     void Start()
@@ -86,6 +88,13 @@ public class EnemyAI : MonoBehaviour
         {
             Debug.LogError("Enemies' Game Manager is NULL.");
         }
+
+        _uiManager = GameObject.Find("UI_Manager").GetComponent<UIManager>();
+        if (_uiManager == null)
+        {
+            Debug.LogError("Enemies' UI Manager is NULL.");
+        }
+
 
         // Set current damage to base damage as long as the dark is inactive
         if (_colorManager.IsDarkActive == false)
@@ -121,6 +130,12 @@ public class EnemyAI : MonoBehaviour
         }
 
         _spellContainer = GameObject.Find("Spell_Container");
+
+        if (_targetPosition == null)
+        {
+            StopMoving();
+            _animator.SetBool("isMoving", false);
+        }
     }
 
     private void FixedUpdate()
@@ -196,6 +211,7 @@ public class EnemyAI : MonoBehaviour
         {
             // Tells the gameManager the enemy was destroyed and then destroys itself
             _waveManager.EnemyDestroyed();
+            _uiManager.EnemyTypeDestroyed(_monsterID);
             Destroy(gameObject);
         }
     }
@@ -499,6 +515,7 @@ public class EnemyAI : MonoBehaviour
     {
         // Stop movement
         _isMoving = false;
+        _animator.SetBool("isMoving", false);
         RangedAttack();
         Debug.Log("StopMoving()");
     }

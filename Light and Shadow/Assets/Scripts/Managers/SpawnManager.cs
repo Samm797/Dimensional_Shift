@@ -11,18 +11,28 @@ public class SpawnManager : MonoBehaviour
 
     // Communication with other Managers
     [SerializeField] private WaveManager _waveManager;
+    private UIManager _uiManager;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Instantiate(_monsterPrefabs[1], _spawnPoints[0]);
+        //GameObject dave = Instantiate(_monsterPrefabs[0], _spawnPoints[0]);
+        //dave.transform.parent = _monsterContainer.transform;
+    }
+
+    private void Awake()
+    {
+        _uiManager = GameObject.Find("UI_Manager").GetComponent<UIManager>();
+        if (_uiManager == null)
+        {
+            Debug.LogError("SpawnManager's UI Manager is NULL.");
+        }
+
         if (_waveManager == null)
         {
             Debug.LogError("SpawnManager's Game Manager is NULL.");
         }
-        
-        //Instantiate(_monsterPrefabs[1], _spawnPoints[0]);
-        //GameObject dave = Instantiate(_monsterPrefabs[0], _spawnPoints[0]);
-        //dave.transform.parent = _monsterContainer.transform;
     }
 
     public void StartSpawning(int wave)
@@ -67,6 +77,7 @@ public class SpawnManager : MonoBehaviour
 
             // Tell the gameManager to log the monster
             _waveManager.EnemySpawned(1);
+            _uiManager.EnemyTypeSpawned(randomMonster);
 
             // Decrement numberToSpawn and then wait 0.5 seconds.
             _numberToSpawn--;
