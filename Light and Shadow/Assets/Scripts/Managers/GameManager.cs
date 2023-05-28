@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
             Debug.LogError("The Wave Manager on the GameManager is NULL");
         }
 
-        DontDestroyOnLoad(this.gameObject);
     }
 
     private void Update()

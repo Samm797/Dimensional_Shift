@@ -127,13 +127,15 @@ public class WaveManager : MonoBehaviour
 
     private IEnumerator NextWavePreparationRoutine()
     {
-        yield return new WaitForSeconds(3);
         // UI Manager displays the countdown while resetting the number of monsters
         _uiManager.WavePreparation(_waveNumber);
         
         // Update the top left wave
         _uiManager.DisplayCurrentWave(_waveNumber);
 
+        // Wait for the wave prep and the UI updates to start
+        yield return new WaitForSeconds(3);
+        
         // Start spawning the monsters
         _spawnManager.StartSpawning(_waveNumber);
     }

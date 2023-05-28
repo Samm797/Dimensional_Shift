@@ -384,14 +384,6 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        if (attackPoint == null)
-        {
-            return;
-        }
-        Gizmos.DrawWireSphere(attackPoint.position, _attackDistance);
-    }
 
     /// <summary>
     /// Method for a ranged attack

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    
+
     // Text Holders
     [SerializeField] private GameObject _waveCountdown;
     [SerializeField] private GameObject _playerLost;

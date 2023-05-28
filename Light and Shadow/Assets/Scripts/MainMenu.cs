@@ -6,33 +6,27 @@ public class MainMenu : MonoBehaviour
 {
     private Scene scene;
     private GameManager _gameManager;
-    private bool _endlessModeOn = false;
+    private static bool _endlessModeOn = false;
     public Button newGame, highScore, thanks, endlessMode;
     public Button backButton;
     public GameObject highScoreText;
     public GameObject creditText;
 
-    public bool EndlessModeOn { get { return _endlessModeOn; } }
+    public static bool EndlessModeOn { get { return _endlessModeOn; } }
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        scene = SceneManager.GetActiveScene();
+
     }
 
     private void Update()
     {
 
-        if (scene.buildIndex == 1 && _endlessModeOn)
-        {
-            _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
-            _gameManager.EndlessOn();
-            Destroy(gameObject);
-        }
     }
 
     public void LoadGame()
     {
+        _endlessModeOn = false;
         SceneManager.LoadScene(1);
     }
 
