@@ -1,7 +1,6 @@
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
