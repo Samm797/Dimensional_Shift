@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private bool _isPlayerDead = false, _didPlayerWin = false, _hasGameplayStarted = false, _isGameOver = false;
+    private bool _isPlayerDead = false, _didPlayerWin = false, _hasGameplayStarted = false, _isGameOver = false, _isGamePaused = false;
 
     // Communication with other Managers
     private UIManager _uiManager;
@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-
+        Time.timeScale = 1.0f;
     }
 
     private void Awake()
@@ -58,10 +58,17 @@ public class GameManager : MonoBehaviour
             }
         }
 
-    }
-
-    private void StartGame()
-    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (_isGamePaused)
+            {
+                UnPauseGame();
+            }
+            else
+            {
+                PauseGame();
+            }
+        }
 
     }
 
@@ -79,6 +86,7 @@ public class GameManager : MonoBehaviour
         if (_didPlayerWin)
         {
             _uiManager.PlayerWon();
+            Time.timeScale = 0f;
             GameOver();
             return;
         }
@@ -86,6 +94,7 @@ public class GameManager : MonoBehaviour
         if (_isPlayerDead)
         {
             _uiManager.PlayerLost();
+            Time.timeScale = 0f;
             GameOver();
         }
     }
@@ -94,5 +103,25 @@ public class GameManager : MonoBehaviour
     {
         // Hope to be implemented
         Debug.Log("EndlessOn()");
+    }
+
+    private void PauseGame()
+    {
+        _uiManager.PauseGame();
+        _isGamePaused = true;
+        Time.timeScale = 0f;
+    }
+
+    private void UnPauseGame()
+    {
+        _uiManager.UnPauseGame();
+        _isGamePaused = false;
+        Time.timeScale = 1f;
+    }
+
+    public void BackToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(0);
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-
     // Text Holders
     [SerializeField] private GameObject _waveCountdown;
     [SerializeField] private GameObject _playerLost;
@@ -13,30 +12,41 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _restartGame;
     [SerializeField] private GameObject _startGame;
     [SerializeField] private GameObject _warpExplanation;
+    [SerializeField] private GameObject _pause;
 
     // Text 
     [SerializeField] private TMP_Text _countdownText;
     [SerializeField] private TMP_Text _waveNumberText;
     [SerializeField] private TMP_Text _brutesText;
     [SerializeField] private TMP_Text _magesText;
+    [SerializeField] private TMP_Text _timerText;
+    [SerializeField] private TMP_Text _playerLostText;
+    [SerializeField] private TMP_Text _playerWonText;
 
     // Keeping track of monsters for the UI
     private int _numberOfBrutes;
     private int _numberOfMages;
+    private int _totalMonstersDestroyed;
 
     // Communication with Managers
     private WaveManager _waveManager;
+    private Timer _timer;
 
     // Start is called before the first frame update
     void Start()
     {
+        // UI Elements set to inactive
         _waveCountdown.SetActive(false);
         _playerLost.SetActive(false);
-        _playerWon.SetActive(false);
         _restartGame.SetActive(false);
+        _playerWon.SetActive(false);
         _warpExplanation.SetActive(false);
+        _pause.SetActive(false);
         
+
+        // The only element that needs to be active (that would go inactive at some point) at the start is the start game element 
         _startGame.SetActive(true);
+
         
         _numberOfBrutes = 0;
         _numberOfMages = 0;
@@ -49,15 +59,16 @@ public class UIManager : MonoBehaviour
         _waveManager = GameObject.Find("Wave_Manager").GetComponent<WaveManager>();
         if (_waveManager == null)
         {
-            Debug.LogError("The Wave Manager on the GameManager is NULL");
+            Debug.LogError("The Wave Manager on the UI Manager is NULL");
+        }
+
+        _timer = GameObject.Find("Timer").GetComponent<Timer>();
+        if (_timer == null)
+        {
+            Debug.LogError("The Timer on the UI Manager is NULL.");
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public void StartGame()
     {
@@ -108,12 +119,14 @@ public class UIManager : MonoBehaviour
     {
         _waveCountdown.SetActive(false);
         _playerLost.SetActive(true);
+        _playerLostText.text = $"You lasted {_timer.formattedTime} and banished {_totalMonstersDestroyed} enemies!";
         _restartGame.SetActive(true);
     }
 
     public void PlayerWon()
     {
         _waveCountdown.SetActive(false);
+        _playerWonText.text = $"You saved the world in {_timer.formattedTime}!";
         _playerWon.SetActive(true);
     }
 
@@ -137,6 +150,17 @@ public class UIManager : MonoBehaviour
     /// <param name="monsterID">0 = mage; 1 = brute</param>
     public void EnemyTypeDestroyed(int monsterID)
     {
+        // If total monsters destroyed is below 0, set it to 0
+        if (_totalMonstersDestroyed < 0)
+        {
+            _totalMonstersDestroyed = 0;
+        } 
+        // Increment it 
+        _totalMonstersDestroyed++;
+
+
+
+        _totalMonstersDestroyed++;
         switch (monsterID)
         {
             default:
@@ -160,4 +184,20 @@ public class UIManager : MonoBehaviour
                 break;
         }
     }
+
+    public void UpdateTimer(string time)
+    {
+        _timerText.text = time;
+    }
+
+    public void PauseGame()
+    {
+        _pause.SetActive(true);
+    }
+
+    public void UnPauseGame()
+    {
+        _pause.SetActive(false);
+    }
+
 }

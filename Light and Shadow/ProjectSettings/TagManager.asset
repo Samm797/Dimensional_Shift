@@ -22,7 +22,7 @@ TagManager:
   - Obstacle
   - Player
   - Enemy
-  - 
+  - PauseMenu
   - 
   - 
   - 
@@ -58,4 +58,7 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 2260104465
+    locked: 0
+  - name: PauseMenu
+    uniqueID: 4134022687
     locked: 0

@@ -83,7 +83,7 @@ public class MainMenu : MonoBehaviour
     public void HighScore()
     {
         HideButtons();
-        backButton.gameObject.SetActive(false);
+        backButton.gameObject.SetActive(true);
         highScoreText.SetActive(true);
         creditText.SetActive(false);
     }

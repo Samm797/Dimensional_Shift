@@ -252,11 +252,19 @@ public class EnemyAI : MonoBehaviour
     IEnumerator RoamingRoutine()
     {
         _isRoutineActive = true;
+        int loopsThrough = 0;
         while (_state == State.Roaming)
         {
+            loopsThrough++;
             Vector3 roamPosition = GetRoamingPosition();
             MoveToLocation(roamPosition);
             yield return new WaitForSeconds(2f);
+
+            // If the monsters run through the roaming routine more than 3 times, they will change their state to chasing
+            if (loopsThrough >= 4)
+            {
+                _state = State.Chasing;
+            }
         }
         _isRoutineActive = false;
     }
@@ -356,6 +364,7 @@ public class EnemyAI : MonoBehaviour
     {
         // If the player is within range, change the state to Chasing
         float targetRange = 10f;
+
         if (Vector2.Distance(transform.position, _player.GetPosition()) < targetRange)
         {
             _state = State.Chasing;

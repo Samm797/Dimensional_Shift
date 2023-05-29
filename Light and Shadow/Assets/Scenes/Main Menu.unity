@@ -181,31 +181,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Player by JKTimmons - Unity Store
-
-    Brute/Mage by BlackThornProd -
-    Unity Store
-
-    Background by BlackThrornProd - Unity Store
-
-    Spells/Pillars
-    by Brackeys - Unity Store
-
-    Cooldown Icons by Blink - Unity Store
-
-    Font
-    by Kenney - Kenney.nl
-
-    Sounds by Brackeys - Unity Store
-
-    Music by xDeviruchi
-    - .youtube.com/@xDeviruchi
-
-    PlayTesting by Becca,
-
-
-    Special thanks to
-    my wife, Becca, for helping me to work on this the past week. :)'
+  m_text: "Player by JKTimmons - Unity Store\nBrute/Mage by BlackThornProd - Unity
+    Store\nBackground by BlackThrornProd - Unity Store\nSpells/Boulders by Brackeys
+    - Unity Store\nCooldown Icons by Blink - Unity Store\nFont by Kenney - Kenney.nl\nSounds
+    by Brackeys - Unity Store\n Music by Marllon Silva (xDeviruchi) - youtube.com/@xDeviruchi\n\nhuge
+    thanks to my playtesters - Baxter, Genrick, Trentkal, Capra_Demon\n\nANd special
+    thanks to my wife, Becca, for helping me to work on this the past week. :)"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4b5c688cd1c774c4cb33cfd6a96ccb9e, type: 2}
   m_sharedMaterial: {fileID: 2102225201699509511, guid: 4b5c688cd1c774c4cb33cfd6a96ccb9e, type: 2}

@@ -2507,8 +2507,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _FaceTex:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Scale: {x: 30.35, y: 1}
+        m_Offset: {x: 69.16, y: 0}
     - _MainTex:
         m_Texture: {fileID: -8315290640324705961}
         m_Scale: {x: 1, y: 1}

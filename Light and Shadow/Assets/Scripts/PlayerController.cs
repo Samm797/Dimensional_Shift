@@ -134,9 +134,6 @@ public class PlayerController : MonoBehaviour
             _playerDead = true;
         }
 
-        
-
-
         Dash();
 
         // Mouse 0, making this "Fire1" so I can utilize different inputs easier later if wanted
@@ -183,6 +180,7 @@ public class PlayerController : MonoBehaviour
         _animator.SetTrigger("attack");
         _canCast = Time.time + _castCooldown;
         yield return new WaitForSeconds(0.18f);
+
         // Instantiates a spell with a direction and speel, sets the velocity, and puts it in the Spawn_Manager in the hierarchy
         GameObject spell = Instantiate(_spellPrefab, transform.position + _spellOffset, Quaternion.identity);
         spell.GetComponent<Rigidbody2D>().velocity = target * speed;
@@ -196,7 +194,6 @@ public class PlayerController : MonoBehaviour
         // Calls the colorManager function to shift all shift-able objects
         _colorManager.ChangeDimension();
 
-        // TODO: Add audio and camera effects to DimensionShift
     }
 
     public Vector3 GetPosition()
