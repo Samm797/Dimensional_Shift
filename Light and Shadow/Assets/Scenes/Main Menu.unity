@@ -460,8 +460,8 @@ MonoBehaviour:
   m_text: "Your dimension is under attack! You are the only hope for your home! \n\nAn
     evil force has opened gateways to another dimension and monsters are pouring
     through! \n\nbecause of this tear between worlds, you find yourself able to warp
-    between your home and this other world... But at what cost?\n\nIt's up to you
-    , brave hero, to vanquish your enemies and save your dimension from utter destruction!"
+    between your home and this other world... But at what cost?\n\nIt's up to you,
+    brave hero, to vanquish your enemies and save your dimension from utter destruction!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4b5c688cd1c774c4cb33cfd6a96ccb9e, type: 2}
   m_sharedMaterial: {fileID: 2102225201699509511, guid: 4b5c688cd1c774c4cb33cfd6a96ccb9e, type: 2}
@@ -3310,7 +3310,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.039215688, g: 0.34901962, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
