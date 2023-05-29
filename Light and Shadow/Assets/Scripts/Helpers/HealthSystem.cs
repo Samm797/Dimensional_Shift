@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 
 public class HealthSystem : MonoBehaviour
@@ -9,7 +8,6 @@ public class HealthSystem : MonoBehaviour
 
     public int CurrentHealth {get {return _currentHealth;}}
     
-    // Start is called before the first frame update
     void Start()
     {
         _currentHealth = _maxHealth;

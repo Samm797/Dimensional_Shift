@@ -291,7 +291,6 @@ public class EnemyAI : MonoBehaviour
     {
         // The direction to the player
         Vector3 direction = (_player.GetPosition() - transform.position).normalized;
-        Debug.DrawRay(transform.position, direction * _rayLengthForCollision, Color.red, 0f);
 
         Vector3 left45 = ShiftVector45Degrees(direction, true);
         Vector3 right45 = ShiftVector45Degrees(direction, false);
@@ -299,8 +298,6 @@ public class EnemyAI : MonoBehaviour
         bool obstacleInFront = DidRaycastHit(_rayLengthForCollision, direction);
         bool obstacleOnLeft = DidRaycastHit(_avoidanceThreshold, left45);
         bool obstacleOnRight = DidRaycastHit(_avoidanceThreshold, right45);
-        Debug.DrawRay(transform.position, left45 * _avoidanceThreshold, Color.green, 0f);
-        Debug.DrawRay(transform.position, right45 * _avoidanceThreshold, Color.blue, 0f);
 
         // If there's nothing in front of the monster
         if (!obstacleInFront && !obstacleOnLeft && !obstacleOnRight)
@@ -329,7 +326,6 @@ public class EnemyAI : MonoBehaviour
     {
         // Returns a random direction
         Vector3 roamingPosition = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
-        //Debug.DrawRay(transform.position, roamingPosition, Color.white, 10f);
         
         // If there is no obstacle in front of the roamingPosition
         if (!DidRaycastHit(_rayLengthForRandomMovement, roamingPosition))
@@ -338,14 +334,12 @@ public class EnemyAI : MonoBehaviour
         }
         // If there's an obstacle in front of the player, but not one 45 degrees to the left, use the left 45 degrees
         Vector3 leftShiftRoam = ShiftVector45Degrees(roamingPosition, true);
-        //Debug.DrawRay(transform.position, leftShiftRoam, Color.green, 10f);
         if (!DidRaycastHit(_rayLengthForRandomMovement, leftShiftRoam))
         {
             return leftShiftRoam;
         }
         // If there's an obstacle to the left, use the right 45 degrees
         Vector3 rightShiftRoam = ShiftVector45Degrees(roamingPosition, false);
-        //Debug.DrawRay(transform.position, rightShiftRoam, Color.blue, 10f);
         if (!DidRaycastHit(_rayLengthForRandomMovement, rightShiftRoam))
         {
             return rightShiftRoam;
@@ -364,7 +358,6 @@ public class EnemyAI : MonoBehaviour
             // Increment the random counter, then call the function again
             _randomNumberCounter++;
             Vector3 newRoam = GetRoamingPosition().normalized;
-            //Debug.DrawRay(transform.position, newRoam, Color.red, 10f);
             return newRoam;
         }
     }
@@ -418,7 +411,6 @@ public class EnemyAI : MonoBehaviour
     private void RangedAttack()
     {
 
-        Debug.Log("RangedAttack()");
         switch (_monsterID)
         {
             default:
@@ -536,7 +528,6 @@ public class EnemyAI : MonoBehaviour
         _isMoving = false;
         _animator.SetBool("isMoving", false);
         RangedAttack();
-        Debug.Log("StopMoving()");
     }
 }
 

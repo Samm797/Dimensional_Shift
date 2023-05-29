@@ -1,6 +1,4 @@
 using System.Collections;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -83,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
         // Set initial move speed
         _activeMoveSpeed = _moveSpeed;
-        
+
         // Set main camera
         _camera = Camera.main;
 
@@ -97,7 +95,7 @@ public class PlayerController : MonoBehaviour
         _spellSound = _audioManager.PlayerSpell;
         _dashSound = _audioManager.PlayerDash;
 
-}
+    }
 
     private void Awake()
     {
@@ -112,7 +110,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("The ColorManager for the player is NULL.");
         }
-        
+
         _audioManager = GameObject.Find("Audio_Manager").GetComponent<AudioManager>();
         if (_audioManager == null)
         {
@@ -137,7 +135,7 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        
+
         Vector3 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
 
@@ -147,7 +145,7 @@ public class PlayerController : MonoBehaviour
         {
             FlipPlayer();
         }
-        else if (mousePos.x < transform.position.x &&  _facingRight)
+        else if (mousePos.x < transform.position.x && _facingRight)
         {
             FlipPlayer();
         }
@@ -165,8 +163,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire1") && Time.time > _canCast)
         {
             // Find the mouse position and set the z coordinate to 0
-            
-            
+
+
             // Sets the direction vector to the mouse position for aiming purposes
             Vector3 difference = mousePos - transform.position;
             float distance = difference.magnitude;
@@ -183,7 +181,7 @@ public class PlayerController : MonoBehaviour
             DimensionShift();
         }
 
-        
+
     }
 
     private void MovePlayer()

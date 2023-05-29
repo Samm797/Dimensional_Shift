@@ -109,8 +109,7 @@ public class GameManager : MonoBehaviour
 
     public void EndlessOn()
     {
-        // Hope to be implemented
-        Debug.Log("EndlessOn()");
+
     }
 
     private void PauseGame()

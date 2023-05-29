@@ -1,6 +1,4 @@
 using System.Collections;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ColorManager : MonoBehaviour
@@ -9,7 +7,7 @@ public class ColorManager : MonoBehaviour
     private ColorChanger[] _colorChangers;
 
     public bool IsDarkActive { get { return _isDarkActive; } }
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +45,7 @@ public class ColorManager : MonoBehaviour
                 colorChanger.ShiftToDark();
             }
         }
-        
+
         _isDarkActive = !_isDarkActive;
         yield break;
     }
