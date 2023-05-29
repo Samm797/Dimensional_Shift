@@ -11,6 +11,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _playerLost;
     [SerializeField] private GameObject _playerWon;
     [SerializeField] private GameObject _restartGame;
+    [SerializeField] private GameObject _startGame;
+    [SerializeField] private GameObject _warpExplanation;
 
     // Text 
     [SerializeField] private TMP_Text _countdownText;
@@ -32,9 +34,15 @@ public class UIManager : MonoBehaviour
         _playerLost.SetActive(false);
         _playerWon.SetActive(false);
         _restartGame.SetActive(false);
+        _warpExplanation.SetActive(false);
+        
+        _startGame.SetActive(true);
+        
         _numberOfBrutes = 0;
         _numberOfMages = 0;
-    }
+        _magesText.text = $"Mages: {_numberOfMages}";
+        _brutesText.text = $"Brutes: {_numberOfBrutes}";
+        }
 
     private void Awake()
     {
@@ -49,6 +57,19 @@ public class UIManager : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void StartGame()
+    {
+        StartCoroutine(StartGameRoutine());
+    }
+
+    private IEnumerator StartGameRoutine()
+    {
+        _startGame.SetActive(false);
+        _warpExplanation.SetActive(true);
+        yield return new WaitForSeconds(6);
+        _warpExplanation.SetActive(false);
     }
 
     public void DisplayCurrentWave(int waveNumber)

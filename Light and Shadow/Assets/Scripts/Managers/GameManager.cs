@@ -38,9 +38,10 @@ public class GameManager : MonoBehaviour
         // only works if the game hasn't started yet
         if (!_hasGameplayStarted)
         {
-            if (Input.GetKeyDown(KeyCode.S))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 _hasGameplayStarted = true;
+                _uiManager.StartGame();
                 _waveManager.NextWavePublic();
                 _uiManager.StartPlayingSequence(_waveManager.WaveNumber);
             }
