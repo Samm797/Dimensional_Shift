@@ -12,6 +12,7 @@ public class WaveManager : MonoBehaviour
     /// </summary>
     private int _activeEnemies;
     private bool _isRoutineActive;
+    private bool _endlessModeOn;
 
     //Communication with other Managers
     private SpawnManager _spawnManager;
@@ -46,6 +47,7 @@ public class WaveManager : MonoBehaviour
         _waveNumber = 0;
         _activeEnemies = 0;
         _isRoutineActive = false;
+        _endlessModeOn = MainMenu.EndlessModeOn;
     }
     
 
@@ -91,14 +93,17 @@ public class WaveManager : MonoBehaviour
         // Increment the wave number
         _waveNumber++;
 
-        // If wave number is greater than the final wave, this function will no longer be called as we do the GameOverSequence from the gameManager
-        if (_waveNumber > _FINALWAVE)
+        if (!_endlessModeOn)
         {
-            _waveNumber = _FINALWAVE;
-            // Implementation for a boss if time allows can go here
-            _gameManager.DidPlayerWin = true;
-            _gameManager.GameOverSequence();
-            return;
+            // If wave number is greater than the final wave, this function will no longer be called as we do the GameOverSequence from the gameManager
+            if (_waveNumber > _FINALWAVE)
+            {
+                _waveNumber = _FINALWAVE;
+                // Implementation for a boss if time allows can go here
+                _gameManager.DidPlayerWin = true;
+                _gameManager.GameOverSequence();
+                return;
+            }
         }
 
         // Do something different on the first wave

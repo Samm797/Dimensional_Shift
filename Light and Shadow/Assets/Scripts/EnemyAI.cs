@@ -56,6 +56,11 @@ public class EnemyAI : MonoBehaviour
     // Communicating with Managers
     private WaveManager _waveManager;
     private UIManager _uiManager;
+    private AudioManager _audioManager;
+
+    // Audio
+    private AudioSource _enemyBanished;
+    private AudioSource _enemyHit;
 
 
     void Start()
@@ -109,6 +114,10 @@ public class EnemyAI : MonoBehaviour
 
         // No routine is running at the start
         _isRoutineActive = false;
+
+        // Set sounds
+        _enemyBanished = _audioManager.EnemyBanished;
+        _enemyHit = _audioManager.EnemyHit;
     }
 
     private void Awake()
@@ -130,6 +139,12 @@ public class EnemyAI : MonoBehaviour
         }
 
         _spellContainer = GameObject.Find("Spell_Container");
+
+        _audioManager = GameObject.Find("Audio_Manager").GetComponent<AudioManager>();
+        if (_audioManager == null)
+        {
+            Debug.LogError("The Monster's audio manager is NULL.");
+        }
 
         if (_targetPosition == null)
         {
@@ -212,6 +227,7 @@ public class EnemyAI : MonoBehaviour
             // Tells the gameManager the enemy was destroyed and then destroys itself
             _waveManager.EnemyDestroyed();
             _uiManager.EnemyTypeDestroyed(_monsterID);
+            _audioManager.PlaySound(_enemyBanished);
             Destroy(gameObject);
         }
     }
@@ -220,6 +236,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (other.CompareTag("Spell"))
         {
+            _audioManager.PlaySound(_enemyHit);
             // If dark is not active, do 1 damage to enemies
             if (_colorManager.IsDarkActive == false)
             {
@@ -236,6 +253,7 @@ public class EnemyAI : MonoBehaviour
         // Only called while the player is dashing
         if (other.CompareTag("Player"))
         {
+            _audioManager.PlaySound(_enemyHit);
             // If dark is not active, do 2 damage to enemies
             if (_colorManager.IsDarkActive == false)
             {

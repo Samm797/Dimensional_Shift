@@ -38,26 +38,9 @@ public class SpawnManager : MonoBehaviour
     public void StartSpawning(int wave)
     {
         // Spawns different numbers based on the waveNumber
-        switch (wave)
-        {
-            case 0:
-                break;
-            case 1:
-                _numberToSpawn = 3;
-                Debug.Log($"The spawn number should be 3. The current number is {_numberToSpawn}.");
-                break;
-            case 2:
-                _numberToSpawn = 4;
-                Debug.Log($"The spawn number should be 4. The current number is {_numberToSpawn}.");
-                break;
-            case 3: 
-                _numberToSpawn = 5;
-                Debug.Log($"The spawn number should be 5. The current number is {_numberToSpawn}.");
-                break;
-            default:
-                Debug.LogError("Default case reached.");
-                break;
-        }
+        int baseNumber = 3;
+
+        _numberToSpawn = (baseNumber + (wave - 1));
 
         StartCoroutine(SpawnMonsterRoutine());
     }

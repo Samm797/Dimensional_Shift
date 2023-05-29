@@ -39,13 +39,18 @@ public class PlayerController : MonoBehaviour
     private Animator _animator;
 
     // Dimension shifting
-    private ColorManager _colorManager;
     private float _canShift = -0.5f;
     private float _shiftCooldown = 2f;
 
+    // Audio
+    private AudioSource _hitSound;
+    private AudioSource _spellSound;
+    private AudioSource _warpSound;
+
     // Communicating with Managers
     private GameManager _gameManager;
-
+    private ColorManager _colorManager;
+    private AudioManager _audioManager;
 
 
     // Start is called before the first frame update
@@ -75,25 +80,43 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("The player Animator is NULL.");
         }
 
+        // Set initial move speed
+        _activeMoveSpeed = _moveSpeed;
+        
+        // Set main camera
+        _camera = Camera.main;
+
+        // Set the player's initial rotation and facing direction
+        rotationPoint.transform.rotation = Quaternion.Euler(0, 180f, 0f);
+        _facingRight = true;
+
+        // Set sounds
+        _hitSound = _audioManager.PlayerHit;
+        _warpSound = _audioManager.PlayerWarp;
+        _spellSound = _audioManager.PlayerSpell;
+
+}
+
+    private void Awake()
+    {
+        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        if (_gameManager == null)
+        {
+            Debug.LogError("The GameManager for the player is NULL.");
+        }
+
         _colorManager = GameObject.Find("Color_Manager").GetComponent<ColorManager>();
         if (_colorManager == null)
         {
             Debug.LogError("The ColorManager for the player is NULL.");
         }
-
-        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
-        if (_colorManager == null)
-        {
-            Debug.LogError("The GameManager for the player is NULL.");
-        }
         
-        _activeMoveSpeed = _moveSpeed;
-        _camera = Camera.main;
-
-        rotationPoint.transform.rotation = Quaternion.Euler(0, 180f, 0f);
-
-        _facingRight = true;
-}
+        _audioManager = GameObject.Find("Audio_Manager").GetComponent<AudioManager>();
+        if (_audioManager == null)
+        {
+            Debug.LogError("The AudioManager for the player is NULL.");
+        }
+    }
 
     private void FixedUpdate()
     {
@@ -180,6 +203,7 @@ public class PlayerController : MonoBehaviour
         _animator.SetTrigger("attack");
         _canCast = Time.time + _castCooldown;
         yield return new WaitForSeconds(0.18f);
+        _audioManager.PlaySound(_spellSound);
 
         // Instantiates a spell with a direction and speel, sets the velocity, and puts it in the Spawn_Manager in the hierarchy
         GameObject spell = Instantiate(_spellPrefab, transform.position + _spellOffset, Quaternion.identity);
@@ -191,6 +215,7 @@ public class PlayerController : MonoBehaviour
     {
         // Updates the cooldown variable to make sure the player can only shift once the cooldown is up
         _canShift = Time.time + _shiftCooldown;
+        _audioManager.PlaySound(_warpSound);
         // Calls the colorManager function to shift all shift-able objects
         _colorManager.ChangeDimension();
 
@@ -268,6 +293,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("MonsterSpell") && _dashCounter <= 0)
         {
             _healthSystem.Damage(other.GetComponent<EnemySpellController>().damage);
+            _audioManager.PlaySound(_hitSound);
             _animator.SetTrigger("damage");
         }
     }

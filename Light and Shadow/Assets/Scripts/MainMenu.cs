@@ -6,12 +6,22 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 {
     private static bool _endlessModeOn = false;
-    public Button newGame, highScore, thanks, endlessMode;
+
+    [Header("Buttons")]
+    public Button newGame;
+    public Button thanks;
+    public Button endlessMode;
+    public Button story;
+
     public Button backButton;
-    public GameObject highScoreText;
+
+    [Header("Text")]
     public GameObject creditText;
     public GameObject instructionText;
     public GameObject spaceToContinue;
+    public GameObject storyText;
+
+
     private bool _readyToContinue;
     private bool _isRoutineActive;
 
@@ -33,15 +43,15 @@ public class MainMenu : MonoBehaviour
     private void BeginningOfGame()
     {
         newGame.gameObject.SetActive(true);
-        highScore.gameObject.SetActive(true);
         thanks.gameObject.SetActive(true);
         endlessMode.gameObject.SetActive(true);
+        story.gameObject.SetActive(true);
 
         backButton.gameObject.SetActive(false);
-        highScoreText.SetActive(false);
         creditText.SetActive(false);
         instructionText.SetActive(false);
         spaceToContinue.SetActive(false);
+        storyText.SetActive(false);
 
     }
 
@@ -84,32 +94,35 @@ public class MainMenu : MonoBehaviour
     {
         HideButtons();
         backButton.gameObject.SetActive(true);
-        highScoreText.SetActive(true);
         creditText.SetActive(false);
     }
 
     public void Credits()
     {
         HideButtons();
-        highScoreText.SetActive(false);
         creditText.SetActive(true);
+    }
+
+    public void Story()
+    {
+        HideButtons();
+        storyText.SetActive(true);
     }
 
     private void HideButtons()
     {
         newGame.gameObject.SetActive(false);
-        highScore.gameObject.SetActive(false);
         thanks.gameObject.SetActive(false);
         endlessMode.gameObject.SetActive(false);
-
+        story.gameObject.SetActive(false);
         backButton.gameObject.SetActive(true);
     }
 
 
     public void Back()
     {
-        highScoreText.SetActive(false);
         creditText.SetActive(false);
+        storyText.SetActive(false);
         backButton.gameObject.SetActive(false);
         ShowButtons();
     }
@@ -117,10 +130,9 @@ public class MainMenu : MonoBehaviour
     private void ShowButtons()
     {
         newGame.gameObject.SetActive(true);
-        highScore.gameObject.SetActive(true);
         thanks.gameObject.SetActive(true);
         endlessMode.gameObject.SetActive(true);
-
+        story.gameObject.SetActive(true);
         backButton.gameObject.SetActive(false);
     }
 

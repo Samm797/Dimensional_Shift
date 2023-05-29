@@ -8,9 +8,11 @@ public class GameManager : MonoBehaviour
     // Communication with other Managers
     private UIManager _uiManager;
     private WaveManager _waveManager;
+    private AudioManager _audioManager;
 
     public bool IsPlayerDead { set { _isPlayerDead = value; } }
     public bool DidPlayerWin { set { _didPlayerWin = value; } }
+    public bool HasGameplayStarted { get { return _hasGameplayStarted; } }
 
     private void Start()
     {
@@ -29,6 +31,12 @@ public class GameManager : MonoBehaviour
         if (_waveManager == null)
         {
             Debug.LogError("The Wave Manager on the GameManager is NULL");
+        }
+        
+        _audioManager = GameObject.Find("Audio_Manager").GetComponent<AudioManager>();
+        if (_audioManager == null)
+        {
+            Debug.LogError("The Audio Manager on the GameManager is NULL");
         }
 
     }

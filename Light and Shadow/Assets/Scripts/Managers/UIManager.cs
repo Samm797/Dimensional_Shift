@@ -13,6 +13,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _startGame;
     [SerializeField] private GameObject _warpExplanation;
     [SerializeField] private GameObject _pause;
+    [SerializeField] private GameObject _pressEsc;
+    [SerializeField] private GameObject _instructions;
 
     // Text 
     [SerializeField] private TMP_Text _countdownText;
@@ -22,6 +24,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _timerText;
     [SerializeField] private TMP_Text _playerLostText;
     [SerializeField] private TMP_Text _playerWonText;
+    [SerializeField] private TMP_Text _playerLostRestartText;
 
     // Keeping track of monsters for the UI
     private int _numberOfBrutes;
@@ -31,6 +34,9 @@ public class UIManager : MonoBehaviour
     // Communication with Managers
     private WaveManager _waveManager;
     private Timer _timer;
+
+    // Endless mode
+    private bool _endlessModeOn;
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +48,8 @@ public class UIManager : MonoBehaviour
         _playerWon.SetActive(false);
         _warpExplanation.SetActive(false);
         _pause.SetActive(false);
+        _pressEsc.SetActive(false);
+        _instructions.SetActive(false);
         
 
         // The only element that needs to be active (that would go inactive at some point) at the start is the start game element 
@@ -52,6 +60,8 @@ public class UIManager : MonoBehaviour
         _numberOfMages = 0;
         _magesText.text = $"Mages: {_numberOfMages}";
         _brutesText.text = $"Brutes: {_numberOfBrutes}";
+
+        _endlessModeOn = MainMenu.EndlessModeOn;
         }
 
     private void Awake()
@@ -118,14 +128,28 @@ public class UIManager : MonoBehaviour
     public void PlayerLost()
     {
         _waveCountdown.SetActive(false);
+        _pressEsc.SetActive(false);
+        _instructions.SetActive(false);
         _playerLost.SetActive(true);
-        _playerLostText.text = $"You lasted {_timer.formattedTime} and banished {_totalMonstersDestroyed} enemies!";
         _restartGame.SetActive(true);
+        _playerLostText.text = $"You lasted {_timer.formattedTime}\n and banished {_totalMonstersDestroyed} enemies!";
+        
+        if (!_endlessModeOn)
+        {
+            _playerLostRestartText.text = "Press \"R\" to try again?";
+        }
+
+        if (_endlessModeOn)
+        {
+            _playerLostRestartText.text = "Can you banish more? Press \"R\" to try again!";
+        }
     }
 
     public void PlayerWon()
     {
         _waveCountdown.SetActive(false);
+        _pressEsc.SetActive(false);
+        _instructions.SetActive(false);
         _playerWonText.text = $"You saved the world in {_timer.formattedTime}!";
         _playerWon.SetActive(true);
     }
@@ -158,9 +182,6 @@ public class UIManager : MonoBehaviour
         // Increment it 
         _totalMonstersDestroyed++;
 
-
-
-        _totalMonstersDestroyed++;
         switch (monsterID)
         {
             default:
@@ -193,11 +214,15 @@ public class UIManager : MonoBehaviour
     public void PauseGame()
     {
         _pause.SetActive(true);
+        _pressEsc.SetActive(true);
+        _instructions.SetActive(true);
     }
 
     public void UnPauseGame()
     {
         _pause.SetActive(false);
+        _pressEsc.SetActive(false);
+        _instructions.SetActive(false);
     }
 
 }

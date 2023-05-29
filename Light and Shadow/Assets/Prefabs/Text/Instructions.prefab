@@ -66,23 +66,24 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'MOVE - WASD
+  m_text: '<b>MOVE</b> - WASD
 
 
-    CAST - LEFT MOUSE CLICK
+    <b>CAST</b> - LEFT MOUSE CLICK
 
 
-    DASH - RIGHT MOUSE CLICK
-    /  LEFT SHIFT
+    <b>DASH</b>
+    - RIGHT MOUSE CLICK
 
-    -- You are invincible and deal damage while dashing. You can
-    also dash through objects and enemies!
+    -- You are invincible and deal damage while dashing.
+    You can also dash through objects and enemies!
 
 
-    WARP DIMENSIONS - SPACE BAR
+    <b>WARP DIMENSIONS</b> -
+    SPACE BAR
 
-    --if
-    you are in the monster''s dimension, you take and deal double damage. Be careful! '
+    --if you are in the monster''s dimension, you take and deal double
+    damage. Be careful! '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4b5c688cd1c774c4cb33cfd6a96ccb9e, type: 2}
   m_sharedMaterial: {fileID: 2102225201699509511, guid: 4b5c688cd1c774c4cb33cfd6a96ccb9e, type: 2}
