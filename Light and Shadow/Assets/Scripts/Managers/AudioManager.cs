@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource _playerHit;
     [SerializeField] private AudioSource _playerSpell;
     [SerializeField] private AudioSource _playerWarp;
+    [SerializeField] private AudioSource _playerDash;
 
     // Accessible by other classes
     public AudioSource EnemyBanished { get { return _enemyBanished; } }
@@ -25,6 +27,7 @@ public class AudioManager : MonoBehaviour
     public AudioSource PlayerHit { get { return _playerHit; } }
     public AudioSource PlayerSpell { get { return _playerSpell; } }
     public AudioSource PlayerWarp { get { return _playerWarp; } }
+    public AudioSource PlayerDash { get { return _playerDash; } }
 
 
     // Endless mode

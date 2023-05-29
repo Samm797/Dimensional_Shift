@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
     private AudioSource _hitSound;
     private AudioSource _spellSound;
     private AudioSource _warpSound;
+    private AudioSource _dashSound;
 
     // Communicating with Managers
     private GameManager _gameManager;
@@ -94,6 +95,7 @@ public class PlayerController : MonoBehaviour
         _hitSound = _audioManager.PlayerHit;
         _warpSound = _audioManager.PlayerWarp;
         _spellSound = _audioManager.PlayerSpell;
+        _dashSound = _audioManager.PlayerDash;
 
 }
 
@@ -236,7 +238,8 @@ public class PlayerController : MonoBehaviour
             // If the cooldown is up and we are not currently dashing
             if (_dashCooldownCounter <= 0 && _dashCounter <= 0)
             {
-                // Make our collider a trigger and spin
+                // Make our collider a trigger and set the animation
+                _audioManager.PlaySound(_dashSound);
                 _collider.isTrigger = true;
                 _animator.SetTrigger("attack02");
 

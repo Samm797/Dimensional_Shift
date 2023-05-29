@@ -26,6 +26,14 @@ public class AudioManagerMainMenu : MonoBehaviour
             PlaySound(_mainMenuLoop);
             _mainMenuLoop.loop = true;
         }
+
+        if (_mainMenuLoop.isPlaying)
+        {
+            if (_mainMenuIntro.isPlaying)
+            {
+                _mainMenuIntro.Stop();
+            }
+        }
     }
 
     private void OnDisable()
