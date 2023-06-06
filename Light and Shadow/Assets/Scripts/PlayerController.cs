@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour
         Dash();
 
         // Mouse 0, making this "Fire1" so I can utilize different inputs easier later if wanted
-        if (Input.GetButtonDown("Fire1") && Time.time > _canCast)
+        if (Input.GetButton("Fire1") && Time.time > _canCast)
         {
             // Find the mouse position and set the z coordinate to 0
 
