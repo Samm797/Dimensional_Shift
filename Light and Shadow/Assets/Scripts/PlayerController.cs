@@ -11,12 +11,12 @@ public class PlayerController : MonoBehaviour
     private float _activeMoveSpeed;
     private float _dashLength = 0.5f, _dashCooldown = 1.0f;
     private float _dashCounter, _dashCooldownCounter;
-    private Vector3 _min = new Vector3(-23f, -21.75f, 0), _max = new Vector3(23f, 23f, 0);
+    private Vector3 _min = new Vector3(-23f, -23f, 0), _max = new Vector3(23f, 23f, 0);
 
     // Combat
     [SerializeField] private GameObject _spellPrefab;
     [SerializeField] private GameObject _spellContainer;
-    private Vector3 _spellOffset = new Vector3(-0.2f, 1.5f, 0f);
+    // * removed to fix issues #11/12 private Vector3 _spellOffset = new Vector3(-0.2f, 1.5f, 0f);
     private float _spellSpeed = 30f;
     private float _canCast = -0.5f;
     private float _castCooldown = 1f;
@@ -206,7 +206,7 @@ public class PlayerController : MonoBehaviour
         _audioManager.PlaySound(_spellSound);
 
         // Instantiates a spell with a direction and speel, sets the velocity, and puts it in the Spawn_Manager in the hierarchy
-        GameObject spell = Instantiate(_spellPrefab, transform.position + _spellOffset, Quaternion.identity);
+        GameObject spell = Instantiate(_spellPrefab, transform.position/* + _spellOffset*/, Quaternion.identity);
         spell.GetComponent<Rigidbody2D>().velocity = target * speed;
         spell.transform.parent = _spellContainer.transform;
     }
