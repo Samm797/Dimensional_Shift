@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public bool IsPlayerDead { set { _isPlayerDead = value; } }
     public bool DidPlayerWin { set { _didPlayerWin = value; } }
     public bool HasGameplayStarted { get { return _hasGameplayStarted; } }
+    public bool IsGamePaused { get { return _isGamePaused; } }
 
     private void Start()
     {

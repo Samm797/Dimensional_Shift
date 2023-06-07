@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -55,6 +56,11 @@ public class PlayerController : MonoBehaviour
     public float DashCooldown { get { return _dashCooldown; } }
     public float WarpCooldown { get { return _warpCooldown; } }
     public float CastCooldown { get { return _castCooldown; } }
+
+    // Hit registration
+    [SerializeField] private List<SpriteRenderer> _spriteRenderers;
+    [SerializeField] private Color _startingColor;
+    [SerializeField] private Color _hitColor;
 
 
     // Start is called before the first frame update
@@ -301,13 +307,48 @@ public class PlayerController : MonoBehaviour
             _healthSystem.Damage(other.GetComponent<EnemySpellController>().damage);
             _audioManager.PlaySound(_hitSound);
             _animator.SetTrigger("damage");
+            ShowDamaged();
         }
     }
 
 
     private void FlipPlayer()
     {
+        if (_gameManager.IsGamePaused)
+        {
+            return;
+        }
+
         rotationPoint.transform.Rotate(0f, 180f, 0f);
         _facingRight = !_facingRight;
+    }
+
+    private void ShowDamaged()
+    {
+        StartCoroutine(ShowDamageRoutine());
+    }
+
+    private IEnumerator ShowDamageRoutine()
+    {
+        // If there's nothing in the list, return
+        if (_spriteRenderers.Count <= 0)
+        {
+            yield break;
+        }
+
+        // Turn every sprite renderers' color to the appropriate hit color
+        for (int i = 0; i < _spriteRenderers.Count; i++)
+        {
+            _spriteRenderers[i].color = _hitColor;
+        }
+
+        // Wait some time 
+        yield return new WaitForSeconds(0.3f);
+
+        // Turn every sprite renderers' color to the starting color
+        for (int i = 0; i < _spriteRenderers.Count; i++)
+        {
+            _spriteRenderers[i].color = _startingColor;
+        }
     }
 }
