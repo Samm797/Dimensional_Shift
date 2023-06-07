@@ -449,6 +449,13 @@ MonoBehaviour:
   _baseDamage: 1
   _darkDamage: 2
   _monsterID: 0
+  _spriteRenderers:
+  - {fileID: 4533046828325292086}
+  - {fileID: 4533046829193518280}
+  - {fileID: 4533046827402072128}
+  - {fileID: 4533046827863865278}
+  _startingColor: {r: 1, g: 1, b: 1, a: 1}
+  _hitColor: {r: 1, g: 0.11372549, b: 0, a: 1}
   _spellPrefab: {fileID: 8152842139207104699, guid: d7f337a2551493944ba172534190aeec, type: 3}
   attackPoint: {fileID: 0}
   playerLayer:

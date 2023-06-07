@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
@@ -37,6 +39,9 @@ public class EnemyAI : MonoBehaviour
     /// 0 = mage; 1 = brute;
     /// </summary>
     [SerializeField] private int _monsterID;
+    [SerializeField] private List<SpriteRenderer> _spriteRenderers;
+    [SerializeField] private Color _startingColor;
+    [SerializeField] private Color _hitColor;
 
     // Attacking
     private int _currentDamage;
@@ -237,6 +242,9 @@ public class EnemyAI : MonoBehaviour
         if (other.CompareTag("Spell"))
         {
             _audioManager.PlaySound(_enemyHit);
+
+            ShowDamaged();
+
             // If dark is not active, do 1 damage to enemies
             if (_colorManager.IsDarkActive == false)
             {
@@ -254,6 +262,9 @@ public class EnemyAI : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             _audioManager.PlaySound(_enemyHit);
+
+            ShowDamaged();
+
             // If dark is not active, do 2 damage to enemies
             if (_colorManager.IsDarkActive == false)
             {
@@ -264,6 +275,35 @@ public class EnemyAI : MonoBehaviour
             {
                 _healthSystem.Damage(3);
             }
+        }
+    }
+
+    private void ShowDamaged()
+    {
+        StartCoroutine(ShowDamageRoutine());
+    }
+
+    private IEnumerator ShowDamageRoutine()
+    {
+        // If there's nothing in the list, return
+        if (_spriteRenderers.Count <= 0)
+        {
+            yield break;
+        }
+
+        // Turn every sprite renderers' color to the appropriate hit color
+        for (int i = 0; i < _spriteRenderers.Count; i++)
+        {
+            _spriteRenderers[i].color = _hitColor;
+        }
+
+        // Wait some time 
+        yield return new WaitForSeconds(0.3f);
+        
+        // Turn every sprite renderers' color to the starting color
+        for (int i = 0; i < _spriteRenderers.Count; i++)
+        {
+            _spriteRenderers[i].color = _startingColor;
         }
     }
 
