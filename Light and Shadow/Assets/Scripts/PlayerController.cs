@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     // Combat
     [SerializeField] private GameObject _spellPrefab;
     [SerializeField] private GameObject _spellContainer;
-    // * removed to fix issues #11/12 private Vector3 _spellOffset = new Vector3(-0.2f, 1.5f, 0f);
+    // * removed to fix issues #11/12 * private Vector3 _spellOffset = new Vector3(-0.2f, 1.5f, 0f);
     private float _spellSpeed = 30f;
     private float _canCast = -0.5f;
     private float _castCooldown = 1f;
@@ -36,9 +36,9 @@ public class PlayerController : MonoBehaviour
     // Animation
     private Animator _animator;
 
-    // Dimension shifting
-    private float _canShift = -0.5f;
-    private float _shiftCooldown = 2f;
+    // Dimension warping
+    private float _canWarp = -0.5f;
+    private float _warpCooldown = 2f;
 
     // Audio
     private AudioSource _hitSound;
@@ -50,6 +50,11 @@ public class PlayerController : MonoBehaviour
     private GameManager _gameManager;
     private ColorManager _colorManager;
     private AudioManager _audioManager;
+
+    // Cooldown access
+    public float DashCooldown { get { return _dashCooldown; } }
+    public float WarpCooldown { get { return _warpCooldown; } }
+    public float CastCooldown { get { return _castCooldown; } }
 
 
     // Start is called before the first frame update
@@ -176,7 +181,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Spacebar
-        if (Input.GetButtonDown("Shift") && Time.time > _canShift)
+        if (Input.GetButtonDown("Shift") && Time.time > _canWarp)
         {
             DimensionShift();
         }
@@ -214,7 +219,7 @@ public class PlayerController : MonoBehaviour
     private void DimensionShift()
     {
         // Updates the cooldown variable to make sure the player can only shift once the cooldown is up
-        _canShift = Time.time + _shiftCooldown;
+        _canWarp = Time.time + _warpCooldown;
         _audioManager.PlaySound(_warpSound);
         // Calls the colorManager function to shift all shift-able objects
         _colorManager.ChangeDimension();

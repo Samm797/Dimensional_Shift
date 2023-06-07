@@ -5656,10 +5656,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Instructions
       objectReference: {fileID: 0}
-    - target: {fileID: 6062142474280015662, guid: a88f134e0dc289a449777c514291f137, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6062142474280015663, guid: a88f134e0dc289a449777c514291f137, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -10547,7 +10543,7 @@ GameObject:
   - component: {fileID: 1919748247}
   - component: {fileID: 1919748246}
   m_Layer: 5
-  m_Name: DimensionCD Background
+  m_Name: WarpCD Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10700,7 +10696,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bbec391037d64b4eb5befbc42e49704, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coolDownLength: 1.5
+  cooldownID: 1
   _ability: 324
 --- !u!1 &1997526818
 GameObject:
@@ -11065,7 +11061,7 @@ GameObject:
   - component: {fileID: 2025954163}
   - component: {fileID: 2025954164}
   m_Layer: 5
-  m_Name: AttackCD
+  m_Name: CastCD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11192,7 +11188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bbec391037d64b4eb5befbc42e49704, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coolDownLength: 1
+  cooldownID: 0
   _ability: 323
 --- !u!1 &2033987458
 GameObject:
@@ -11437,7 +11433,7 @@ GameObject:
   - component: {fileID: 2081651299}
   - component: {fileID: 2081651301}
   m_Layer: 5
-  m_Name: DimensionCD
+  m_Name: WarpCD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11513,7 +11509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bbec391037d64b4eb5befbc42e49704, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coolDownLength: 2
+  cooldownID: 2
   _ability: 32
 --- !u!4 &2104870574 stripped
 Transform:
@@ -11661,7 +11657,7 @@ GameObject:
   - component: {fileID: 2130013366}
   - component: {fileID: 2130013365}
   m_Layer: 5
-  m_Name: AttackCD Background
+  m_Name: CastCD Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
