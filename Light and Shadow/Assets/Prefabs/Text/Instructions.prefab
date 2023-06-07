@@ -71,19 +71,21 @@ MonoBehaviour:
 
     <b>CAST</b> - LEFT MOUSE CLICK
 
-
-    <b>DASH</b>
-    - RIGHT MOUSE CLICK
-
-    -- You are invincible and deal damage while dashing.
-    You can also dash through objects and enemies!
+    -- Hold or
+    click to fire!
 
 
-    <b>WARP DIMENSIONS</b> -
-    SPACE BAR
+    <b>DASH</b> - RIGHT MOUSE CLICK
 
-    --if you are in the monster''s dimension, you take and deal double
-    damage. Be careful! '
+    -- You are invincible
+    and deal damage while dashing. You can also dash through objects and enemies!
+
+
+    <b>WARP
+    DIMENSIONS</b> - SPACE BAR
+
+    --if you are in the monster''s dimension, you
+    take and deal double damage. Be careful! '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4b5c688cd1c774c4cb33cfd6a96ccb9e, type: 2}
   m_sharedMaterial: {fileID: 2102225201699509511, guid: 4b5c688cd1c774c4cb33cfd6a96ccb9e, type: 2}
